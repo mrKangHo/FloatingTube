@@ -7,15 +7,32 @@
 
 [![Swift](https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white)](https://swift.org)
 [![macOS](https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white)](https://apple.com/macos)
+[![Release](https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release)](https://github.com/mrKangHo/FloatingTube/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-macOS%20Native-lightgrey.svg?style=flat)]()
 
 <br/>
+
+<a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.0.0-macos.zip">
+  <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.0.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
+</a>
+
+<br/><br/>
 
 **코딩, 디자인, 문서 작업, 웹 서핑 중에도 작업 화면을 가리지 않고 유튜브를 자유롭게 감상하세요.**  
 기본 PiP(화면 속 화면)의 제한을 뛰어넘어, **창 크기 맞춤 전체화면**, **마우스 관통 모드**, **상태표시줄 제어**, **로그인 유지** 등 완벽한 멀티태스킹 환경을 제공합니다.
 
 </div>
+
+---
+
+## 📥 간편 다운로드 및 설치 (Download & Install)
+
+소스를 직접 빌드하지 않고 완성된 최신 앱을 바로 사용하실 수 있습니다:
+
+1. **[📥 최신 버전 다운로드 (FloatingTube-v1.0.0-macos.zip)](https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.0.0-macos.zip)** 링크를 클릭하여 다운로드합니다.
+2. 다운로드된 `FloatingTube-v1.0.0-macos.zip`의 압축을 풉니다.
+3. 압축 해제된 **`FloatingTube.app`**을 **응용 프로그램(Applications)** 폴더로 드래그하여 이동합니다.
+4. 앱을 더블 클릭하여 실행합니다.
 
 ---
 
