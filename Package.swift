@@ -8,7 +8,10 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "FloatingTube"
+            name: "FloatingTube",
+            resources: [
+                .process("Resources")
+            ]
         ),
         .testTarget(
             name: "FloatingTubeTests",

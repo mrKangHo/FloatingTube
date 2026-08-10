@@ -19,6 +19,11 @@ mkdir -p "${RESOURCES_DIR}"
 # Copy binary
 cp "${BUILD_DIR}/${APP_NAME}" "${MACOS_DIR}/${APP_NAME}"
 
+# Copy AppIcon if available
+if [ -f "Sources/FloatingTube/Resources/AppIcon.icns" ]; then
+    cp "Sources/FloatingTube/Resources/AppIcon.icns" "${RESOURCES_DIR}/AppIcon.icns"
+fi
+
 # Create Info.plist
 cat <<EOF > "${CONTENTS_DIR}/Info.plist"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -27,6 +32,10 @@ cat <<EOF > "${CONTENTS_DIR}/Info.plist"
 <dict>
     <key>CFBundleExecutable</key>
     <string>${APP_NAME}</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundleIconName</key>
+    <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
     <string>com.antigravity.FloatingTube</string>
     <key>CFBundleName</key>
@@ -49,4 +58,4 @@ cat <<EOF > "${CONTENTS_DIR}/Info.plist"
 EOF
 
 chmod +x "${MACOS_DIR}/${APP_NAME}"
-echo "✅ Successfully built ${APP_NAME}.app!"
+echo "✅ Successfully built ${APP_NAME}.app with AppIcon!"
