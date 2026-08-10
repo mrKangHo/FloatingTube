@@ -5,6 +5,10 @@
 ### **macOS 전용 초경량 플로팅 유튜브 플레이어**
 *Always-on-Top Floating YouTube Player with In-App Fullscreen & Click-Through Mode*
 
+[ 🇰🇷 한국어 ](README.md) | [ 🇺🇸 English ](README.en.md)
+
+<br/>
+
 [![Swift](https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white)](https://swift.org)
 [![macOS](https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white)](https://apple.com/macos)
 [![Release](https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release)](https://github.com/mrKangHo/FloatingTube/releases/latest)

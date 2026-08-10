@@ -13,8 +13,8 @@ public struct HistorySheetView: View {
             // Header
             HStack {
                 Picker("", selection: $selectedTab) {
-                    Text("⭐ 즐겨찾기 (\(appState.bookmarks.count))").tag(0)
-                    Text("🕒 최근 재생 (\(appState.history.count))").tag(1)
+                    Text("\(L10n.bookmarksTab) (\(appState.bookmarks.count))").tag(0)
+                    Text("\(L10n.recentHistory) (\(appState.history.count))").tag(1)
                 }
                 .pickerStyle(.segmented)
                 .frame(width: 240)
@@ -25,7 +25,7 @@ public struct HistorySheetView: View {
                     Button(action: {
                         appState.clearHistory()
                     }) {
-                        Text("기록 지우기")
+                        Text(L10n.clearHistoryButton)
                             .font(.system(size: 10))
                             .foregroundColor(.red.opacity(0.8))
                     }
@@ -57,7 +57,7 @@ public struct HistorySheetView: View {
                     Image(systemName: selectedTab == 0 ? "star.slash" : "clock.arrow.circlepath")
                         .font(.system(size: 28))
                         .foregroundColor(.white.opacity(0.3))
-                    Text(selectedTab == 0 ? "저장된 즐겨찾기가 없습니다.\n상단의 ⭐ 버튼을 눌러 추가해보세요." : "최근 시청한 기록이 없습니다.")
+                    Text(selectedTab == 0 ? L10n.noBookmarksYet : L10n.noHistoryYet)
                         .font(.system(size: 11))
                         .foregroundColor(.white.opacity(0.5))
                         .multilineTextAlignment(.center)
@@ -120,7 +120,7 @@ struct ItemRowView: View {
                 Spacer()
                 
                 if isCurrent {
-                    Text("재생중")
+                    Text(L10n.play)
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundColor(.red)
                         .padding(.horizontal, 5)

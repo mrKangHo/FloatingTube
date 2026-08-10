@@ -15,7 +15,7 @@ public struct MenuBarContentView: View {
             bringAppToFront()
         }) {
             HStack {
-                Text(appState.videoTitle.isEmpty ? "FloatingTube 플레이어" : appState.videoTitle)
+                Text(appState.videoTitle.isEmpty ? L10n.appTitleDefault : appState.videoTitle)
                     .lineLimit(1)
             }
         }
@@ -23,21 +23,21 @@ public struct MenuBarContentView: View {
         Divider()
         
         // 2. Playback & Paste
-        Button("클립보드 링크 재생") {
+        Button(L10n.playClipboardLink) {
             appState.pasteAndPlayFromClipboard()
             bringAppToFront()
         }
         .keyboardShortcut("v", modifiers: [.command])
         
-        Button(appState.isPlaying ? "일시정지" : "재생") {
+        Button(appState.isPlaying ? L10n.pause : L10n.play) {
             appState.togglePlayPause()
         }
         
-        Button(appState.isMuted ? "음소거 해제" : "음소거") {
+        Button(appState.isMuted ? L10n.unmute : L10n.mute) {
             appState.toggleMute()
         }
         
-        Button("영상 새로고침") {
+        Button(L10n.reloadVideo) {
             appState.reloadVideo()
         }
         .keyboardShortcut("r", modifiers: [.command])
@@ -49,7 +49,7 @@ public struct MenuBarContentView: View {
             appState.toggleAlwaysOnTop()
         }) {
             HStack {
-                Text("항상 화면 위에 고정")
+                Text(L10n.alwaysOnTop)
                 if appState.isAlwaysOnTop {
                     Spacer()
                     Image(systemName: "checkmark")
@@ -63,7 +63,7 @@ public struct MenuBarContentView: View {
             appState.toggleCleanMode()
         }) {
             HStack {
-                Text("클린 뷰 (영상 100% 꽉 찬 화면)")
+                Text(L10n.cleanPlayerView)
                 if appState.isCleanMode {
                     Spacer()
                     Image(systemName: "checkmark")
@@ -76,7 +76,7 @@ public struct MenuBarContentView: View {
             appState.toggleCleanMode()
         }) {
             HStack {
-                Text("유튜브 웹 뷰 (댓글/사이드바)")
+                Text(L10n.youtubeWebView)
                 if !appState.isCleanMode {
                     Spacer()
                     Image(systemName: "checkmark")
@@ -84,24 +84,24 @@ public struct MenuBarContentView: View {
             }
         }
         
-        Button("창 맞춤 전체화면 토글") {
+        Button(L10n.toggleFullscreen) {
             appState.webViewCommandPublisher.send("player.toggleFullscreen();")
         }
         
         Divider()
         
         // 4. Opacity & Window Features
-        Menu("창 투명도") {
-            Button("100% (불투명)") {
+        Menu(L10n.opacityMenu) {
+            Button(L10n.opacity100) {
                 appState.opacity = 1.0
             }
-            Button("80% (약간 투명)") {
+            Button(L10n.opacity80) {
                 appState.opacity = 0.8
             }
-            Button("50% (반투명)") {
+            Button(L10n.opacity50) {
                 appState.opacity = 0.5
             }
-            Button("30% (투명)") {
+            Button(L10n.opacity30) {
                 appState.opacity = 0.3
             }
         }
@@ -110,7 +110,7 @@ public struct MenuBarContentView: View {
             appState.toggleAspectRatioLock()
         }) {
             HStack {
-                Text("16:9 화면비율 잠금")
+                Text(L10n.lockAspectRatio)
                 if appState.isAspectRatioLocked {
                     Spacer()
                     Image(systemName: "checkmark")
@@ -122,7 +122,7 @@ public struct MenuBarContentView: View {
             appState.toggleClickThrough()
         }) {
             HStack {
-                Text("마우스 관통 모드")
+                Text(L10n.clickThroughMode)
                 if appState.isClickThrough {
                     Spacer()
                     Image(systemName: "checkmark")
@@ -134,7 +134,7 @@ public struct MenuBarContentView: View {
         Divider()
         
         // 5. Account & History
-        Button("구글 / 유튜브 계정 로그인") {
+        Button(L10n.googleLogin) {
             appState.openLogin()
             bringAppToFront()
         }
@@ -143,7 +143,7 @@ public struct MenuBarContentView: View {
             appState.toggleBookmark()
         }) {
             HStack {
-                Text("현재 영상 즐겨찾기 추가")
+                Text(L10n.addBookmark)
                 if appState.isCurrentTargetBookmarked() {
                     Spacer()
                     Image(systemName: "checkmark")
@@ -151,12 +151,12 @@ public struct MenuBarContentView: View {
             }
         }
         
-        Button("최근 재생 및 즐겨찾기 목록...") {
+        Button(L10n.historySheet) {
             appState.showHistorySheet.toggle()
             bringAppToFront()
         }
         
-        Button("단축키 안내...") {
+        Button(L10n.shortcutsSheet) {
             appState.showShortcutsSheet.toggle()
             bringAppToFront()
         }
@@ -164,7 +164,7 @@ public struct MenuBarContentView: View {
         Divider()
         
         // 6. Quit
-        Button("FloatingTube 종료") {
+        Button(L10n.quitApp) {
             NSApplication.shared.terminate(nil)
         }
         .keyboardShortcut("q", modifiers: [.command])

@@ -39,7 +39,7 @@ public struct BottomControlBar: View {
                 ) {
                     appState.togglePlayPause()
                 }
-                .help(appState.isPlaying ? "일시정지 (Space)" : "재생 (Space)")
+                .help(appState.isPlaying ? "\(L10n.pause) (Space)" : "\(L10n.play) (Space)")
                 
                 // Mute / Unmute
                 TubeIconButton(
@@ -49,7 +49,7 @@ public struct BottomControlBar: View {
                 ) {
                     appState.toggleMute()
                 }
-                .help("음소거 토글 (M)")
+                .help("\(L10n.mute) (M)")
                 
                 // Reload
                 TubeIconButton(
@@ -59,7 +59,7 @@ public struct BottomControlBar: View {
                 ) {
                     appState.reloadVideo()
                 }
-                .help("새로고침 (⌘R)")
+                .help("\(L10n.reloadVideo) (⌘R)")
                 
                 // Pin HUD Controls
                 TubeIconButton(
@@ -69,7 +69,6 @@ public struct BottomControlBar: View {
                 ) {
                     appState.isControlsPinned.toggle()
                 }
-                .help(appState.isControlsPinned ? "컨트롤 바 항상 표시 중" : "마우스 호버 시에만 표시")
                 
                 // In-App Fullscreen Toggle
                 TubeIconButton(
@@ -79,7 +78,7 @@ public struct BottomControlBar: View {
                 ) {
                     appState.webViewCommandPublisher.send("player.toggleFullscreen();")
                 }
-                .help("창 내 전체화면 토글 (F)")
+                .help("\(L10n.toggleFullscreen) (F)")
                 
                 // Open in External Browser
                 if let target = appState.currentTarget {
@@ -92,7 +91,7 @@ public struct BottomControlBar: View {
                             NSWorkspace.shared.open(url)
                         }
                     }
-                    .help("기본 브라우저에서 열기")
+                    .help(L10n.openInBrowserTooltip)
                 }
             }
         }

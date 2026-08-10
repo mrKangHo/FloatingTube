@@ -45,7 +45,7 @@ public struct HeaderControlBar: View {
                     .font(.system(size: 10))
                     .foregroundColor(.white.opacity(0.5))
                 
-                TextField("유튜브 링크 또는 ID 입력...", text: $appState.inputUrl)
+                TextField(L10n.searchPlaceholder, text: $appState.inputUrl)
                     .textFieldStyle(.plain)
                     .font(.system(size: 11, weight: .regular))
                     .foregroundColor(.white)
@@ -72,7 +72,7 @@ public struct HeaderControlBar: View {
                         .foregroundColor(.white.opacity(0.8))
                 }
                 .buttonStyle(.plain)
-                .help("클립보드 링크 붙여넣기 및 재생 (⌘V)")
+                .help(L10n.playClipboardTooltip)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
@@ -95,7 +95,7 @@ public struct HeaderControlBar: View {
                 ) {
                     appState.toggleAlwaysOnTop()
                 }
-                .help("항상 화면 위에 고정 (⌘T)")
+                .help(L10n.alwaysOnTopTooltip)
                 
                 // 2. View Mode Toggle (Clean Video ↔ Full Web)
                 TubeIconButton(
@@ -105,7 +105,7 @@ public struct HeaderControlBar: View {
                 ) {
                     appState.toggleCleanMode()
                 }
-                .help(appState.isCleanMode ? "현재: 클린 플레이어 뷰 (클릭 시 웹 뷰로 전환)" : "현재: 웹 뷰 (클릭 시 클린 뷰로 전환)")
+                .help(appState.isCleanMode ? L10n.currentCleanModeHelp : L10n.currentWebModeHelp)
             }
         }
         .padding(.horizontal, 10)

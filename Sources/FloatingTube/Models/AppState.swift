@@ -46,7 +46,7 @@ public class AppState: ObservableObject {
     @Published public var isCleanMode: Bool = true {
         didSet {
             UserDefaults.standard.set(isCleanMode, forKey: "FloatingTube_CleanMode")
-            showStatus(isCleanMode ? "클린 뷰 모드" : "유튜브 웹 뷰 모드")
+            showStatus(isCleanMode ? L10n.statusCleanMode : L10n.statusWebMode)
         }
     }
     @Published public var showHistorySheet: Bool = false
@@ -98,7 +98,7 @@ public class AppState: ObservableObject {
             loadTarget(target)
             self.inputUrl = ""
         } else {
-            showStatus("유효한 유튜브 주소가 아닙니다.")
+            showStatus(L10n.statusInvalidUrl)
         }
     }
     
@@ -107,20 +107,20 @@ public class AppState: ObservableObject {
         let resolvedTitle = title ?? defaultTitle(for: target)
         self.videoTitle = resolvedTitle
         addToHistory(target: target, title: resolvedTitle)
-        showStatus("영상 로딩 중...")
+        showStatus(L10n.statusLoadingVideo)
     }
     
     public func pasteAndPlayFromClipboard() {
         guard let clipboardString = NSPasteboard.general.string(forType: .string) else {
-            showStatus("클립보드에 텍스트가 없습니다.")
+            showStatus(L10n.statusNoClipboardText)
             return
         }
         
         if let target = YouTubeURLParser.parse(clipboardString) {
             loadTarget(target)
-            showStatus("클립보드 주소 재생")
+            showStatus(L10n.statusPlayingClipboard)
         } else {
-            showStatus("클립보드에 유튜브 주소가 없습니다.")
+            showStatus(L10n.statusNoClipboardUrl)
         }
     }
     
@@ -128,24 +128,24 @@ public class AppState: ObservableObject {
         isPlaying.toggle()
         let command = isPlaying ? "player.playVideo();" : "player.pauseVideo();"
         webViewCommandPublisher.send(command)
-        showStatus(isPlaying ? "재생" : "일시정지")
+        showStatus(isPlaying ? L10n.play : L10n.pause)
     }
     
     public func toggleMute() {
         isMuted.toggle()
         let command = isMuted ? "player.mute();" : "player.unMute();"
         webViewCommandPublisher.send(command)
-        showStatus(isMuted ? "음소거" : "음소거 해제")
+        showStatus(isMuted ? L10n.mute : L10n.unmute)
     }
     
     public func reloadVideo() {
         webViewCommandPublisher.send("location.reload();")
-        showStatus("새로고침")
+        showStatus(L10n.reloadVideo)
     }
     
     public func toggleAlwaysOnTop() {
         isAlwaysOnTop.toggle()
-        showStatus(isAlwaysOnTop ? "항상 위에 고정됨" : "고정 해제됨")
+        showStatus(isAlwaysOnTop ? L10n.statusAlwaysOnTopEnabled : L10n.statusAlwaysOnTopDisabled)
     }
     
     public func toggleCleanMode() {
@@ -156,28 +156,28 @@ public class AppState: ObservableObject {
     public func openLogin() {
         self.isCleanMode = false
         if let url = URL(string: "https://accounts.google.com/ServiceLogin?service=youtube&continue=https://www.youtube.com") {
-            loadTarget(.direct(url: url), title: "구글 / 유튜브 로그인")
-            showStatus("구글 로그인 화면으로 이동합니다.")
+            loadTarget(.direct(url: url), title: L10n.googleLogin)
+            showStatus(L10n.statusLoginRedirect)
         }
     }
     
     public func toggleAspectRatioLock() {
         isAspectRatioLocked.toggle()
-        showStatus(isAspectRatioLocked ? "16:9 비율 고정됨" : "자유 비율 조절")
+        showStatus(isAspectRatioLocked ? L10n.statusAspectRatioLocked : L10n.statusAspectRatioFree)
     }
     
     public func toggleClickThrough() {
         isClickThrough.toggle()
         if isClickThrough {
-            showStatus("클릭 관통 모드 켜짐 (해제: 단축키 ⌘⇧C)")
+            showStatus(L10n.statusClickThroughOn)
         } else {
-            showStatus("클릭 관통 모드 해제됨")
+            showStatus(L10n.statusClickThroughOff)
         }
     }
     
     public func setPresetSize(width: CGFloat, height: CGFloat, label: String) {
         WindowManager.shared.setSizePreset(width: width, height: height)
-        showStatus("크기 변경: \(label)")
+        showStatus("\(label)")
     }
     
     public func isCurrentTargetBookmarked() -> Bool {
@@ -189,17 +189,17 @@ public class AppState: ObservableObject {
         guard let current = currentTarget else { return }
         if let index = bookmarks.firstIndex(where: { $0.target == current }) {
             bookmarks.remove(at: index)
-            showStatus("즐겨찾기 삭제됨")
+            showStatus(L10n.statusBookmarkRemoved)
         } else {
             let item = PlayHistoryItem(
                 id: current.watchURLString,
-                title: videoTitle.isEmpty ? "유튜브 영상" : videoTitle,
+                title: videoTitle.isEmpty ? "YouTube Video" : videoTitle,
                 target: current,
                 timestamp: Date(),
                 isFavorite: true
             )
             bookmarks.insert(item, at: 0)
-            showStatus("즐겨찾기에 추가됨")
+            showStatus(L10n.statusBookmarkAdded)
         }
         saveBookmarks()
     }
@@ -217,7 +217,7 @@ public class AppState: ObservableObject {
     public func clearHistory() {
         history.removeAll()
         saveHistory()
-        showStatus("시청 기록이 삭제되었습니다.")
+        showStatus(L10n.statusHistoryCleared)
     }
     
     public func showStatus(_ message: String) {

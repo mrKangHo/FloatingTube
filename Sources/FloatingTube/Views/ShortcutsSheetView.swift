@@ -14,7 +14,7 @@ public struct ShortcutsSheetView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "command")
                         .font(.system(size: 13, weight: .bold))
-                    Text("단축키 & 사용 안내")
+                    Text(L10n.shortcutsTitle)
                         .font(.system(size: 13, weight: .bold))
                 }
                 Spacer()
@@ -37,14 +37,14 @@ public struct ShortcutsSheetView: View {
             // Shortcut list
             ScrollView {
                 VStack(spacing: 6) {
-                    shortcutRow(keys: ["⌘", "T"], description: "항상 화면 위에 띄우기 (Always-on-Top) 토글")
-                    shortcutRow(keys: ["⌘", "L"], description: "유튜브 주소 검색창으로 이동")
-                    shortcutRow(keys: ["⌘", "V"], description: "클립보드 주소 복사 후 즉시 재생")
-                    shortcutRow(keys: ["⌘", "R"], description: "현재 동영상 새로고침")
-                    shortcutRow(keys: ["Space"], description: "재생 / 일시정지")
-                    shortcutRow(keys: ["M"], description: "음소거 토글")
-                    shortcutRow(keys: ["⌘", "1~4"], description: "창 크기 프리셋 (소/중/대/특대)")
-                    shortcutRow(keys: ["⌘", "⇧", "C"], description: "마우스 관통(Click-through) 모드")
+                    shortcutRow(keys: ["⌘", "V"], description: L10n.playClipboardLink)
+                    shortcutRow(keys: ["⌘", "T"], description: L10n.alwaysOnTop)
+                    shortcutRow(keys: ["⌘", "⇧", "C"], description: L10n.clickThroughMode)
+                    shortcutRow(keys: ["F"], description: L10n.toggleFullscreen)
+                    shortcutRow(keys: ["Space"], description: "\(L10n.play) / \(L10n.pause)")
+                    shortcutRow(keys: ["M"], description: "\(L10n.mute) / \(L10n.unmute)")
+                    shortcutRow(keys: ["⌘", "R"], description: L10n.reloadVideo)
+                    shortcutRow(keys: ["⌘", "Q"], description: L10n.quitApp)
                 }
                 .padding(12)
             }

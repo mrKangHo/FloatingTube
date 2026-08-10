@@ -14,34 +14,34 @@ struct FloatingTubeApp: App {
         .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) {
-                Button("클립보드 링크 재생") {
+                Button(L10n.playClipboardLink) {
                     AppState.shared.pasteAndPlayFromClipboard()
                 }
                 .keyboardShortcut("v", modifiers: [.command])
                 
-                Button("항상 위에 고정 토글") {
+                Button(L10n.alwaysOnTop) {
                     AppState.shared.toggleAlwaysOnTop()
                 }
                 .keyboardShortcut("t", modifiers: [.command])
                 
-                Button("새로고침") {
+                Button(L10n.reloadVideo) {
                     AppState.shared.reloadVideo()
                 }
                 .keyboardShortcut("r", modifiers: [.command])
             }
             
-            CommandMenu("보기") {
-                Button("클린 뷰 (영상 100% 꽉 찬 화면)") {
+            CommandMenu(L10n.viewMenu) {
+                Button(L10n.cleanPlayerView) {
                     AppState.shared.isCleanMode = true
                     AppState.shared.toggleCleanMode()
                 }
                 
-                Button("유튜브 웹 뷰 (댓글/사이드바)") {
+                Button(L10n.youtubeWebView) {
                     AppState.shared.isCleanMode = false
                     AppState.shared.toggleCleanMode()
                 }
                 
-                Button("창 맞춤 전체화면 토글") {
+                Button(L10n.toggleFullscreen) {
                     AppState.shared.webViewCommandPublisher.send("player.toggleFullscreen();")
                 }
                 .keyboardShortcut("f", modifiers: [])
