@@ -18,8 +18,8 @@
 
 <br/>
 
-<a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.0.0-macos.zip">
-  <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.0.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
+<a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip">
+  <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.1.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
 </a>
 
 <br/><br/>
@@ -35,8 +35,8 @@ Going far beyond basic Picture-in-Picture (PiP) limitations, FloatingTube provid
 
 You can use the latest pre-built application directly:
 
-1. Click **[📥 Download FloatingTube (FloatingTube-v1.0.0-macos.zip)](https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.0.0-macos.zip)**.
-2. Unzip the downloaded `FloatingTube-v1.0.0-macos.zip` file.
+1. Click **[📥 Download FloatingTube (FloatingTube-v1.1.0-macos.zip)](https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip)**.
+2. Unzip the downloaded `FloatingTube-v1.1.0-macos.zip` file.
 3. Drag and drop **`FloatingTube.app`** into your **`/Applications`** folder.
 4. Double-click to open and enjoy!
 
