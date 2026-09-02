@@ -38,13 +38,48 @@ public struct MainContainerView: View {
                 }
             }
             .ignoresSafeArea(.all)
-            .animation(.easeInOut(duration: 0.22), value: !appState.isClickThrough && (appState.isHovered || appState.isControlsPinned))
+            .animation(.spring(response: 0.28, dampingFraction: 0.82), value: !appState.isClickThrough && (appState.isHovered || appState.isControlsPinned))
             
-            // 3. Status Toast Banner
+            // 3. Click-Through Overlay Warning Pill
+            if appState.isClickThrough {
+                VStack {
+                    HStack(spacing: 6) {
+                        Image(systemName: "cursorarrow.rays")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(.orange)
+                        Text("마우스 관통 중 (해제: ⌘⇧C)")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        ZStack {
+                            VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
+                            Color.black.opacity(0.7)
+                        }
+                    )
+                    .clipShape(Capsule())
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.orange.opacity(0.6), lineWidth: 1)
+                    )
+                    .shadow(color: .orange.opacity(0.3), radius: 8, x: 0, y: 3)
+                    .padding(.top, 12)
+                    Spacer()
+                }
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .animation(.spring(response: 0.3, dampingFraction: 0.75), value: appState.isClickThrough)
+            }
+            
+            // 4. Status Toast Banner (Apple Glass Pill Toast)
             if let status = appState.statusMessage {
                 VStack {
                     Spacer()
-                    HStack(spacing: 6) {
+                    HStack(spacing: 7) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.green)
                         Text(status)
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundColor(.white)
@@ -52,26 +87,36 @@ public struct MainContainerView: View {
                     .padding(.horizontal, 14)
                     .padding(.vertical, 7)
                     .background(
-                        Capsule()
-                            .fill(Color.black.opacity(0.85))
+                        ZStack {
+                            VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
+                            Color.black.opacity(0.75)
+                        }
                     )
+                    .clipShape(Capsule())
                     .overlay(
                         Capsule()
-                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                            .stroke(
+                                LinearGradient(
+                                    colors: [Color.white.opacity(0.3), Color.white.opacity(0.1)],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ),
+                                lineWidth: 1
+                            )
                     )
-                    .shadow(color: .black.opacity(0.4), radius: 8, x: 0, y: 3)
-                    .padding(.bottom, (!appState.isClickThrough && (appState.isHovered || appState.isControlsPinned)) ? 42 : 16)
-                    .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                    .shadow(color: .black.opacity(0.45), radius: 12, x: 0, y: 4)
+                    .padding(.bottom, (!appState.isClickThrough && (appState.isHovered || appState.isControlsPinned)) ? 50 : 18)
+                    .transition(.scale(scale: 0.92).combined(with: .opacity))
                 }
-                .animation(.spring(response: 0.3, dampingFraction: 0.8), value: appState.statusMessage)
+                .animation(.spring(response: 0.28, dampingFraction: 0.78), value: appState.statusMessage)
             }
             
-            // 4. Modal Sheet Backdrop & Dialogs
+            // 5. Modal Sheet Backdrop & Dialogs
             if appState.showHistorySheet || appState.showShortcutsSheet {
-                Color.black.opacity(0.45)
+                Color.black.opacity(0.55)
                     .edgesIgnoringSafeArea(.all)
                     .onTapGesture {
-                        withAnimation {
+                        withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
                             appState.showHistorySheet = false
                             appState.showShortcutsSheet = false
                         }
@@ -79,10 +124,10 @@ public struct MainContainerView: View {
                 
                 if appState.showHistorySheet {
                     HistorySheetView(appState: appState)
-                        .transition(.scale(scale: 0.95).combined(with: .opacity))
+                        .transition(.scale(scale: 0.94).combined(with: .opacity))
                 } else if appState.showShortcutsSheet {
                     ShortcutsSheetView(appState: appState)
-                        .transition(.scale(scale: 0.95).combined(with: .opacity))
+                        .transition(.scale(scale: 0.94).combined(with: .opacity))
                 }
             }
         }

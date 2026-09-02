@@ -10,32 +10,37 @@ public struct BottomControlBar: View {
     
     public var body: some View {
         HStack(spacing: 8) {
-            // Drag handle
-            WindowDragHandle()
-                .frame(width: 8, height: 20)
+            // Drag handle with subtle grip styling
+            HStack(spacing: 3) {
+                Image(systemName: "line.3.horizontal")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.4))
+                WindowDragHandle()
+                    .frame(width: 8, height: 22)
+            }
             
-            // Video Title
+            // Video Title & Live Status
             HStack(spacing: 6) {
-                Image(systemName: "play.rectangle.fill")
-                    .font(.system(size: 11))
-                    .foregroundColor(.red)
+                Image(systemName: appState.isPlaying ? "play.circle.fill" : "pause.circle.fill")
+                    .font(.system(size: 12))
+                    .foregroundColor(appState.isPlaying ? Color.red : Color.gray)
                 
-                Text(appState.videoTitle.isEmpty ? "FloatingTube - YouTube Player" : appState.videoTitle)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.white.opacity(0.9))
+                Text(appState.videoTitle.isEmpty ? L10n.appTitleDefault : appState.videoTitle)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.92))
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
             
-            Spacer()
+            Spacer(minLength: 8)
             
             // Player HUD Controls
-            HStack(spacing: 6) {
+            HStack(spacing: 5) {
                 // Play / Pause
                 TubeIconButton(
                     icon: appState.isPlaying ? "pause.fill" : "play.fill",
-                    isActive: false,
-                    activeColor: .white
+                    isActive: appState.isPlaying,
+                    activeColor: .red
                 ) {
                     appState.togglePlayPause()
                 }
@@ -45,7 +50,7 @@ public struct BottomControlBar: View {
                 TubeIconButton(
                     icon: appState.isMuted ? "speaker.slash.fill" : "speaker.wave.2.fill",
                     isActive: appState.isMuted,
-                    activeColor: .red
+                    activeColor: .orange
                 ) {
                     appState.toggleMute()
                 }
@@ -61,14 +66,17 @@ public struct BottomControlBar: View {
                 }
                 .help("\(L10n.reloadVideo) (⌘R)")
                 
-                // Pin HUD Controls
+                // Pin HUD Controls Toggle
                 TubeIconButton(
                     icon: appState.isControlsPinned ? "lock.fill" : "lock.open",
                     isActive: appState.isControlsPinned,
                     activeColor: .indigo
                 ) {
-                    appState.isControlsPinned.toggle()
+                    withAnimation(.spring(response: 0.25, dampingFraction: 0.75)) {
+                        appState.isControlsPinned.toggle()
+                    }
                 }
+                .help(appState.isControlsPinned ? "컨트롤 고정됨 (Hover 없어도 유지)" : "컨트롤 자동 숨김 모드")
                 
                 // In-App Fullscreen Toggle
                 TubeIconButton(
@@ -98,14 +106,25 @@ public struct BottomControlBar: View {
         .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .background(
-            VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
-                .overlay(Color.black.opacity(0.4))
+            ZStack {
+                VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
+                Color.black.opacity(0.4)
+            }
         )
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay(
-            Rectangle()
-                .fill(Color.white.opacity(0.12))
-                .frame(height: 0.8),
-            alignment: .top
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.2), Color.white.opacity(0.08)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ),
+                    lineWidth: 0.9
+                )
         )
+        .shadow(color: .black.opacity(0.35), radius: 10, x: 0, y: -2)
+        .padding(.horizontal, 8)
+        .padding(.bottom, 6)
     }
 }

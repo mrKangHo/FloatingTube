@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="Sources/FloatingTube/Resources/AppIcon.png" width="128" height="128" alt="FloatingTube Logo" />
+
 # 📺 FloatingTube
 
 ### **macOS 전용 초경량 플로팅 유튜브 플레이어**

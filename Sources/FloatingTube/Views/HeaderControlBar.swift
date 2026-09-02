@@ -12,38 +12,19 @@ public struct HeaderControlBar: View {
     
     public var body: some View {
         HStack(spacing: 8) {
-            // Window Traffic Lights
-            HStack(spacing: 6) {
-                Circle()
-                    .fill(Color.red.opacity(0.85))
-                    .frame(width: 11, height: 11)
-                    .onTapGesture {
-                        windowManager.closeWindow()
-                    }
-                Circle()
-                    .fill(Color.yellow.opacity(0.85))
-                    .frame(width: 11, height: 11)
-                    .onTapGesture {
-                        windowManager.minimizeWindow()
-                    }
-                Circle()
-                    .fill(Color.green.opacity(0.85))
-                    .frame(width: 11, height: 11)
-                    .onTapGesture {
-                        windowManager.toggleZoom()
-                    }
-            }
-            .padding(.leading, 2)
+            // Interactive macOS Window Traffic Lights
+            MacOSTrafficLights()
+                .padding(.leading, 4)
             
             // Drag handle spacer
             WindowDragHandle()
-                .frame(width: 10, height: 22)
+                .frame(width: 12, height: 24)
             
-            // URL / Search Input Field
-            HStack(spacing: 4) {
+            // URL / Search Input Field (Glass Pill)
+            HStack(spacing: 5) {
                 Image(systemName: "magnifyingglass")
-                    .font(.system(size: 10))
-                    .foregroundColor(.white.opacity(0.5))
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(isSearchFocused ? .blue : .white.opacity(0.5))
                 
                 TextField(L10n.searchPlaceholder, text: $appState.inputUrl)
                     .textFieldStyle(.plain)
@@ -57,37 +38,77 @@ public struct HeaderControlBar: View {
                 if !appState.inputUrl.isEmpty {
                     Button(action: { appState.inputUrl = "" }) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 10))
+                            .font(.system(size: 11))
                             .foregroundColor(.white.opacity(0.6))
                     }
                     .buttonStyle(.plain)
                 }
                 
-                // Quick Paste button
+                // Quick Paste button with shortcut hint
                 Button(action: {
                     appState.pasteAndPlayFromClipboard()
                 }) {
                     Image(systemName: "doc.on.clipboard")
-                        .font(.system(size: 10))
-                        .foregroundColor(.white.opacity(0.8))
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundColor(.white.opacity(0.85))
                 }
                 .buttonStyle(.plain)
                 .help(L10n.playClipboardTooltip)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, 9)
+            .padding(.vertical, 4.5)
             .background(
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(Color.black.opacity(0.45))
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(Color.black.opacity(isSearchFocused ? 0.6 : 0.4))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(isSearchFocused ? Color.blue.opacity(0.6) : Color.white.opacity(0.12), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(
+                        isSearchFocused ? Color.blue.opacity(0.7) : Color.white.opacity(0.12),
+                        lineWidth: isSearchFocused ? 1.2 : 0.8
+                    )
             )
+            .animation(.easeInOut(duration: 0.15), value: isSearchFocused)
             
-            // Essential Action Buttons (Clean & Minimal)
-            HStack(spacing: 5) {
-                // 1. Always on Top Toggle
+            // Essential Quick Action Buttons
+            HStack(spacing: 4) {
+                // Bookmark Toggle
+                TubeIconButton(
+                    icon: appState.isCurrentTargetBookmarked() ? "star.fill" : "star",
+                    isActive: appState.isCurrentTargetBookmarked(),
+                    activeColor: .yellow
+                ) {
+                    appState.toggleBookmark()
+                }
+                .help(L10n.addBookmark)
+                
+                // History & Bookmarks Sheet Launcher
+                TubeIconButton(
+                    icon: "clock.arrow.circlepath",
+                    isActive: appState.showHistorySheet,
+                    activeColor: .purple
+                ) {
+                    withAnimation(.spring(response: 0.28, dampingFraction: 0.8)) {
+                        appState.showHistorySheet.toggle()
+                        appState.showShortcutsSheet = false
+                    }
+                }
+                .help(L10n.historySheet)
+                
+                // Shortcuts Guide Sheet Launcher
+                TubeIconButton(
+                    icon: "command",
+                    isActive: appState.showShortcutsSheet,
+                    activeColor: .cyan
+                ) {
+                    withAnimation(.spring(response: 0.28, dampingFraction: 0.8)) {
+                        appState.showShortcutsSheet.toggle()
+                        appState.showHistorySheet = false
+                    }
+                }
+                .help(L10n.shortcutsSheet)
+                
+                // Always on Top Toggle
                 TubeIconButton(
                     icon: appState.isAlwaysOnTop ? "pin.fill" : "pin",
                     isActive: appState.isAlwaysOnTop,
@@ -97,7 +118,7 @@ public struct HeaderControlBar: View {
                 }
                 .help(L10n.alwaysOnTopTooltip)
                 
-                // 2. View Mode Toggle (Clean Video ↔ Full Web)
+                // View Mode Toggle (Clean Video ↔ Full Web)
                 TubeIconButton(
                     icon: appState.isCleanMode ? "play.rectangle.fill" : "globe",
                     isActive: appState.isCleanMode,
@@ -109,16 +130,27 @@ public struct HeaderControlBar: View {
             }
         }
         .padding(.horizontal, 10)
-        .padding(.vertical, 6)
+        .padding(.vertical, 7)
         .background(
-            VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
-                .overlay(Color.black.opacity(0.35))
+            ZStack {
+                VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
+                Color.black.opacity(0.35)
+            }
         )
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay(
-            Rectangle()
-                .fill(Color.white.opacity(0.12))
-                .frame(height: 0.8),
-            alignment: .bottom
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .stroke(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.22), Color.white.opacity(0.08)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    ),
+                    lineWidth: 0.9
+                )
         )
+        .shadow(color: .black.opacity(0.35), radius: 10, x: 0, y: 4)
+        .padding(.horizontal, 8)
+        .padding(.top, 6)
     }
 }
