@@ -107,9 +107,13 @@ git clone https://github.com/mrKangHo/FloatingTube.git
 cd FloatingTube
 
 # 2. Tuist 프로젝트 및 워크스페이스 생성
-tuist generate
+./scripts/generate_project.sh
+# 또는 직접 실행: tuist generate
 
-# 3. FloatingTube.xcworkspace가 생성되며 Xcode에서 즉시 실행/디버깅 가능
+# 3. 멀티 모듈 전체 단위 테스트 실행
+./scripts/run_tests.sh
+
+# 4. FloatingTube.xcworkspace가 생성되며 Xcode에서 즉시 실행/디버깅 가능
 ```
 
 ### 빌드 스크립트로 번들링하기 (CLI)
@@ -202,6 +206,8 @@ FloatingTube/
 │   ├── FloatingTubeDataTests/             # 저장소 직렬화 & 영속화 단위 테스트
 │   └── FloatingTubePresentationTests/     # 뷰모델 및 프레젠테이션 로직 단위 테스트
 └── scripts/
+    ├── generate_project.sh                # Tuist Xcode 프로젝트 자동 생성 스크립트
+    ├── run_tests.sh                       # 멀티 모듈 전체 단위 테스트 실행 스크립트
     └── bundle_app.sh                      # 릴리즈 자동 번들링 스크립트
 ```
 

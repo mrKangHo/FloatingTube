@@ -106,9 +106,13 @@ git clone https://github.com/mrKangHo/FloatingTube.git
 cd FloatingTube
 
 # 2. Generate Xcode workspace using Tuist
-tuist generate
+./scripts/generate_project.sh
+# or directly: tuist generate
 
-# 3. Open FloatingTube.xcworkspace and build/run directly in Xcode
+# 3. Run all unit tests
+./scripts/run_tests.sh
+
+# 4. Open FloatingTube.xcworkspace and build/run directly in Xcode
 ```
 
 ### Build via Script (CLI)

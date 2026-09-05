@@ -117,17 +117,4 @@ let project = Project(
             ]
         )
     ],
-    schemes: [
-        .scheme(
-            name: "FloatingTube",
-            shared: true,
-            buildAction: .buildAction(targets: ["FloatingTube"]),
-            testAction: .targets([
-                "FloatingTubeDomainTests",
-                "FloatingTubeDataTests",
-                "FloatingTubePresentationTests"
-            ]),
-            runAction: .runAction(executable: "FloatingTube")
-        )
-    ]
 )
