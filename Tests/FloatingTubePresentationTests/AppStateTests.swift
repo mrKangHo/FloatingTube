@@ -121,6 +121,22 @@ struct AppStateTests {
         #expect(sut.currentTarget != nil)
     }
     
+    @Test("setCleanMode updates isCleanMode and sends webview command")
+    func testSetCleanMode() {
+        let (sut, _, _, _) = makeSUT()
+        var commands: [String] = []
+        let cancellable = sut.webViewCommandPublisher.sink { commands.append($0) }
+        _ = cancellable
+        
+        sut.setCleanMode(false)
+        #expect(sut.isCleanMode == false)
+        #expect(commands.contains("toggleCleanMode(false);"))
+        
+        sut.setCleanMode(true)
+        #expect(sut.isCleanMode == true)
+        #expect(commands.contains("toggleCleanMode(true);"))
+    }
+    
     @Test("Loading valid YouTube URL updates currentTarget and resets inputUrl")
     func testLoadValidURL() {
         let (sut, _, _, _) = makeSUT()

@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 public struct ShortcutsSheetView: View {
     @ObservedObject var appState: AppState
     

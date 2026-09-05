@@ -1,9 +1,9 @@
 import SwiftUI
 import AppKit
 
+@MainActor
 public struct MenuBarContentView: View {
     @ObservedObject var appState: AppState
-    @ObservedObject var windowManager = WindowManager.shared
     
     public init(appState: AppState) {
         self.appState = appState
@@ -59,8 +59,7 @@ public struct MenuBarContentView: View {
         .keyboardShortcut("t", modifiers: [.command])
         
         Button(action: {
-            appState.isCleanMode = true
-            appState.toggleCleanMode()
+            appState.setCleanMode(true)
         }) {
             HStack {
                 Text(L10n.cleanPlayerView)
@@ -72,8 +71,7 @@ public struct MenuBarContentView: View {
         }
         
         Button(action: {
-            appState.isCleanMode = false
-            appState.toggleCleanMode()
+            appState.setCleanMode(false)
         }) {
             HStack {
                 Text(L10n.youtubeWebView)
@@ -172,6 +170,6 @@ public struct MenuBarContentView: View {
     
     private func bringAppToFront() {
         NSApp.activate(ignoringOtherApps: true)
-        windowManager.activeWindow?.makeKeyAndOrderFront(nil)
+        WindowManager.shared.activeWindow?.makeKeyAndOrderFront(nil)
     }
 }

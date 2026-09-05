@@ -10,10 +10,6 @@ public struct MainContainerView: View {
         self.appState = appState
     }
     
-    public init() {
-        self.appState = AppState.shared
-    }
-    
     public var body: some View {
         ZStack {
             // Window Accessor hook to attach NSWindow

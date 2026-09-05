@@ -2,9 +2,9 @@ import SwiftUI
 import AppKit
 import FloatingTubeDomain
 
+@MainActor
 public struct HeaderControlBar: View {
     @ObservedObject var appState: AppState
-    @ObservedObject var windowManager = WindowManager.shared
     @FocusState private var isSearchFocused: Bool
     
     public init(appState: AppState) {

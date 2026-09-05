@@ -1,6 +1,7 @@
 import SwiftUI
 import FloatingTubeDomain
 
+@MainActor
 public struct HistorySheetView: View {
     @ObservedObject var appState: AppState
     @State private var selectedTab = 0 // 0: Bookmarks, 1: History

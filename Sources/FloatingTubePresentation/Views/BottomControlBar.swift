@@ -2,6 +2,7 @@ import SwiftUI
 import AppKit
 import FloatingTubeDomain
 
+@MainActor
 public struct BottomControlBar: View {
     @ObservedObject var appState: AppState
     

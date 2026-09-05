@@ -82,7 +82,7 @@ public class AppState: ObservableObject {
         manageHistoryUseCase: ManageHistoryUseCase,
         pasteAndResolveUseCase: PasteAndResolveUseCase,
         preferencesUseCase: ManagePreferencesUseCase,
-        windowManager: WindowManagerProtocol = WindowManager.shared
+        windowManager: WindowManagerProtocol
     ) {
         self.resolveTargetUseCase = resolveTargetUseCase
         self.manageHistoryUseCase = manageHistoryUseCase
@@ -91,10 +91,14 @@ public class AppState: ObservableObject {
         self.windowManager = windowManager
         
         let prefs = preferencesUseCase.loadPreferences()
-        self.isAlwaysOnTop = prefs.isAlwaysOnTop
-        self.isAspectRatioLocked = prefs.isAspectRatioLocked
-        self.opacity = prefs.opacity
-        self.isCleanMode = prefs.isCleanMode
+        self._isAlwaysOnTop = Published(initialValue: prefs.isAlwaysOnTop)
+        self._isAspectRatioLocked = Published(initialValue: prefs.isAspectRatioLocked)
+        self._opacity = Published(initialValue: prefs.opacity)
+        self._isCleanMode = Published(initialValue: prefs.isCleanMode)
+        
+        windowManager.setAlwaysOnTop(prefs.isAlwaysOnTop)
+        windowManager.setAspectRatioLocked(prefs.isAspectRatioLocked)
+        windowManager.setOpacity(prefs.opacity)
         
         // Initial history & bookmarks from use case
         self.history = manageHistoryUseCase.loadHistory()
@@ -174,6 +178,12 @@ public class AppState: ObservableObject {
     
     public func toggleCleanMode() {
         isCleanMode.toggle()
+        webViewCommandPublisher.send("toggleCleanMode(\(isCleanMode));")
+    }
+    
+    public func setCleanMode(_ enabled: Bool) {
+        guard isCleanMode != enabled else { return }
+        isCleanMode = enabled
         webViewCommandPublisher.send("toggleCleanMode(\(isCleanMode));")
     }
     
