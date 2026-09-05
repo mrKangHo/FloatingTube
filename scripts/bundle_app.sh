@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+if [ -d "/Applications/Xcode.app/Contents/Developer" ] && [ -z "$DEVELOPER_DIR" ]; then
+    export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
+fi
+
 echo "🔨 Building FloatingTube for Release..."
 swift build -c release
 
