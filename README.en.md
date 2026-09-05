@@ -97,33 +97,40 @@ You can use the latest pre-built application directly:
 ### Requirements
 * macOS 13.0 (Ventura) or later
 * Apple Silicon (M1/M2/M3/M4) or Intel x86_64 Mac
-* Swift 5.9+ / Xcode 15.0+
+* Swift 5.9+ / Xcode 15.0+ / Tuist 4.x+
 
-### Build via Script
+### Generate Xcode Project with Tuist (Recommended)
 ```bash
 # 1. Clone repository
 git clone https://github.com/mrKangHo/FloatingTube.git
 cd FloatingTube
 
-# 2. Build release bundle
+# 2. Generate Xcode workspace using Tuist
+tuist generate
+
+# 3. Open FloatingTube.xcworkspace and build/run directly in Xcode
+```
+
+### Build via Script (CLI)
+```bash
+# Build release bundle
 chmod +x scripts/bundle_app.sh
 ./scripts/bundle_app.sh
 
-# 3. Launch application
+# Launch application
 open FloatingTube.app
 ```
 
 ---
 
-## 🏗️ Architecture & Tech Stack
+## 🏗️ Clean Architecture & Modules
 
-FloatingTube is built purely with **native Apple Swift and AppKit/SwiftUI frameworks** without heavy Electron runtimes, ensuring minimal memory footprint and high battery efficiency.
+FloatingTube is structured with **Clean Architecture** principles and modularized via **Tuist**:
 
-* **Core UI**: SwiftUI + AppKit
-* **Render Pipeline**: WebKit (`WKWebView`)
-* **DOM Event Pipeline**: Shadow DOM Pierce (`e.composedPath()`) & Head Stylesheet Injection
-* **State Management**: Combine (`ObservableObject`, `@Published`)
-* **Window System**: `NSWindow` FullSizeContentView & Level Floating
+* **`FloatingTubeDomain`**: Pure business models (`YouTubeTarget`, `PlayHistoryItem`, `WindowPreferences`), UseCases (`ResolveYouTubeTargetUseCase`, `ManageHistoryUseCase`, `PasteAndResolveUseCase`), and repository contracts.
+* **`FloatingTubeData`**: Concrete implementations of repositories and system services (`UserDefaultsHistoryRepository`, `UserDefaultsPreferencesRepository`, `NSPasteboardService`).
+* **`FloatingTubePresentation`**: UI layer featuring SwiftUI views, `AppState` ViewModel, `WindowManager`, and localizations.
+* **`FloatingTube` (App Target)**: Application entry point (`@main`), composition root (`AppDIContainer`), menu bar item, and bundled resources.
 
 ---
 

@@ -1,10 +1,18 @@
 import SwiftUI
 import AppKit
+import FloatingTubeDomain
+import FloatingTubeData
+import FloatingTubePresentation
 
 @main
 struct FloatingTubeApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @ObservedObject private var appState = AppState.shared
+    @ObservedObject private var appState: AppState
+    
+    init() {
+        let container = AppDIContainer.shared
+        self._appState = ObservedObject(wrappedValue: container.appState)
+    }
     
     var body: some Scene {
         WindowGroup {

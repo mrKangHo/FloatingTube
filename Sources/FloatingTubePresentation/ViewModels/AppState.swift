@@ -2,10 +2,18 @@ import Foundation
 import SwiftUI
 import Combine
 import AppKit
+import FloatingTubeDomain
 
 @MainActor
 public class AppState: ObservableObject {
-    public static let shared = AppState()
+    public static var shared: AppState!
+    
+    // Injected UseCases & Services
+    private let resolveTargetUseCase: ResolveYouTubeTargetUseCase
+    private let manageHistoryUseCase: ManageHistoryUseCase
+    private let pasteAndResolveUseCase: PasteAndResolveUseCase
+    private let preferencesUseCase: ManagePreferencesUseCase
+    private let windowManager: WindowManagerProtocol
     
     @Published public var currentTarget: YouTubeTarget?
     @Published public var videoTitle: String = ""
@@ -14,28 +22,28 @@ public class AppState: ObservableObject {
     // Window settings
     @Published public var isAlwaysOnTop: Bool = true {
         didSet {
-            WindowManager.shared.setAlwaysOnTop(isAlwaysOnTop)
-            UserDefaults.standard.set(isAlwaysOnTop, forKey: "FloatingTube_AlwaysOnTop")
+            windowManager.setAlwaysOnTop(isAlwaysOnTop)
+            persistPreferences()
         }
     }
     
     @Published public var isAspectRatioLocked: Bool = true {
         didSet {
-            WindowManager.shared.setAspectRatioLocked(isAspectRatioLocked)
-            UserDefaults.standard.set(isAspectRatioLocked, forKey: "FloatingTube_AspectRatioLocked")
+            windowManager.setAspectRatioLocked(isAspectRatioLocked)
+            persistPreferences()
         }
     }
     
     @Published public var opacity: Double = 1.0 {
         didSet {
-            WindowManager.shared.setOpacity(opacity)
-            UserDefaults.standard.set(opacity, forKey: "FloatingTube_Opacity")
+            windowManager.setOpacity(opacity)
+            persistPreferences()
         }
     }
     
     @Published public var isClickThrough: Bool = false {
         didSet {
-            WindowManager.shared.setClickThrough(isClickThrough)
+            windowManager.setClickThrough(isClickThrough)
             webViewCommandPublisher.send("setClickThroughMode(\(isClickThrough));")
         }
     }
@@ -45,7 +53,7 @@ public class AppState: ObservableObject {
     @Published public var isControlsPinned: Bool = false
     @Published public var isCleanMode: Bool = true {
         didSet {
-            UserDefaults.standard.set(isCleanMode, forKey: "FloatingTube_CleanMode")
+            persistPreferences()
             showStatus(isCleanMode ? L10n.statusCleanMode : L10n.statusWebMode)
         }
     }
@@ -69,18 +77,33 @@ public class AppState: ObservableObject {
     
     private var statusDismissWorkItem: DispatchWorkItem?
     
-    public init() {
-        self.isAlwaysOnTop = UserDefaults.standard.object(forKey: "FloatingTube_AlwaysOnTop") as? Bool ?? true
-        self.isAspectRatioLocked = UserDefaults.standard.object(forKey: "FloatingTube_AspectRatioLocked") as? Bool ?? true
-        self.opacity = UserDefaults.standard.object(forKey: "FloatingTube_Opacity") as? Double ?? 1.0
-        self.isCleanMode = UserDefaults.standard.object(forKey: "FloatingTube_CleanMode") as? Bool ?? true
+    public init(
+        resolveTargetUseCase: ResolveYouTubeTargetUseCase = ResolveYouTubeTargetUseCase(),
+        manageHistoryUseCase: ManageHistoryUseCase,
+        pasteAndResolveUseCase: PasteAndResolveUseCase,
+        preferencesUseCase: ManagePreferencesUseCase,
+        windowManager: WindowManagerProtocol = WindowManager.shared
+    ) {
+        self.resolveTargetUseCase = resolveTargetUseCase
+        self.manageHistoryUseCase = manageHistoryUseCase
+        self.pasteAndResolveUseCase = pasteAndResolveUseCase
+        self.preferencesUseCase = preferencesUseCase
+        self.windowManager = windowManager
         
-        // User requested target (TUVREvz3ejc)
+        let prefs = preferencesUseCase.loadPreferences()
+        self.isAlwaysOnTop = prefs.isAlwaysOnTop
+        self.isAspectRatioLocked = prefs.isAspectRatioLocked
+        self.opacity = prefs.opacity
+        self.isCleanMode = prefs.isCleanMode
+        
+        // Initial history & bookmarks from use case
+        self.history = manageHistoryUseCase.loadHistory()
+        self.bookmarks = manageHistoryUseCase.loadBookmarks()
+        
+        // Default target (TUVREvz3ejc)
         let defaultTarget = YouTubeTarget.video(id: "TUVREvz3ejc", startTime: nil, playlistId: "RDTUVREvz3ejc")
         self.currentTarget = defaultTarget
         self.videoTitle = "YouTube Video [TUVREvz3ejc]"
-        
-        loadSavedData()
         
         if let last = history.first {
             self.currentTarget = last.target
@@ -94,7 +117,7 @@ public class AppState: ObservableObject {
         let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         
-        if let target = YouTubeURLParser.parse(trimmed) {
+        if let target = resolveTargetUseCase.execute(trimmed) {
             loadTarget(target)
             self.inputUrl = ""
         } else {
@@ -111,12 +134,13 @@ public class AppState: ObservableObject {
     }
     
     public func pasteAndPlayFromClipboard() {
-        guard let clipboardString = NSPasteboard.general.string(forType: .string) else {
+        let result = pasteAndResolveUseCase.execute()
+        guard let raw = result.rawString, !raw.isEmpty else {
             showStatus(L10n.statusNoClipboardText)
             return
         }
         
-        if let target = YouTubeURLParser.parse(clipboardString) {
+        if let target = result.target {
             loadTarget(target)
             showStatus(L10n.statusPlayingClipboard)
         } else {
@@ -176,7 +200,7 @@ public class AppState: ObservableObject {
     }
     
     public func setPresetSize(width: CGFloat, height: CGFloat, label: String) {
-        WindowManager.shared.setSizePreset(width: width, height: height)
+        windowManager.setSizePreset(width: width, height: height)
         showStatus("\(label)")
     }
     
@@ -187,36 +211,26 @@ public class AppState: ObservableObject {
     
     public func toggleBookmark() {
         guard let current = currentTarget else { return }
-        if let index = bookmarks.firstIndex(where: { $0.target == current }) {
-            bookmarks.remove(at: index)
-            showStatus(L10n.statusBookmarkRemoved)
-        } else {
-            let item = PlayHistoryItem(
-                id: current.watchURLString,
-                title: videoTitle.isEmpty ? "YouTube Video" : videoTitle,
-                target: current,
-                timestamp: Date(),
-                isFavorite: true
-            )
-            bookmarks.insert(item, at: 0)
-            showStatus(L10n.statusBookmarkAdded)
-        }
-        saveBookmarks()
+        let (isBookmarked, updatedBookmarks) = manageHistoryUseCase.toggleBookmark(
+            target: current,
+            title: videoTitle.isEmpty ? "YouTube Video" : videoTitle,
+            currentBookmarks: bookmarks
+        )
+        self.bookmarks = updatedBookmarks
+        showStatus(isBookmarked ? L10n.statusBookmarkAdded : L10n.statusBookmarkRemoved)
     }
     
     public func addToHistory(target: YouTubeTarget, title: String) {
-        history.removeAll { $0.target == target }
-        let item = PlayHistoryItem(id: target.watchURLString, title: title, target: target, timestamp: Date())
-        history.insert(item, at: 0)
-        if history.count > 50 {
-            history = Array(history.prefix(50))
-        }
-        saveHistory()
+        self.history = manageHistoryUseCase.addToHistory(
+            target: target,
+            title: title,
+            currentHistory: history
+        )
     }
     
     public func clearHistory() {
-        history.removeAll()
-        saveHistory()
+        manageHistoryUseCase.clearHistory()
+        self.history.removeAll()
         showStatus(L10n.statusHistoryCleared)
     }
     
@@ -241,26 +255,13 @@ public class AppState: ObservableObject {
         }
     }
     
-    private func saveHistory() {
-        if let encoded = try? JSONEncoder().encode(history) {
-            UserDefaults.standard.set(encoded, forKey: "FloatingTube_History")
-        }
-    }
-    
-    private func saveBookmarks() {
-        if let encoded = try? JSONEncoder().encode(bookmarks) {
-            UserDefaults.standard.set(encoded, forKey: "FloatingTube_Bookmarks")
-        }
-    }
-    
-    private func loadSavedData() {
-        if let data = UserDefaults.standard.data(forKey: "FloatingTube_History"),
-           let decoded = try? JSONDecoder().decode([PlayHistoryItem].self, from: data) {
-            self.history = decoded
-        }
-        if let data = UserDefaults.standard.data(forKey: "FloatingTube_Bookmarks"),
-           let decoded = try? JSONDecoder().decode([PlayHistoryItem].self, from: data) {
-            self.bookmarks = decoded
-        }
+    private func persistPreferences() {
+        let prefs = WindowPreferences(
+            isAlwaysOnTop: isAlwaysOnTop,
+            isAspectRatioLocked: isAspectRatioLocked,
+            opacity: opacity,
+            isCleanMode: isCleanMode
+        )
+        preferencesUseCase.savePreferences(prefs)
     }
 }

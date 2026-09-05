@@ -98,24 +98,14 @@ public struct TubeIconButton: View {
                         .foregroundColor(isActive ? activeColor : (isHovered ? .white : .white.opacity(0.9)))
                 }
             }
-            .padding(.horizontal, title != nil ? 9 : 7)
+            .padding(.horizontal, title != nil ? 8 : 6)
             .padding(.vertical, 5)
             .background(
-                ZStack {
-                    if isActive {
-                        RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .fill(activeColor.opacity(0.25))
-                    } else if isHovered {
-                        RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .fill(Color.white.opacity(0.18))
-                    } else {
-                        RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .fill(Color.black.opacity(0.25))
-                    }
-                }
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(isActive ? activeColor.opacity(0.2) : (isHovered ? Color.white.opacity(0.15) : Color.clear))
             )
             .overlay(
-                RoundedRectangle(cornerRadius: 7, style: .continuous)
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
                     .stroke(
                         isActive
                             ? activeColor.opacity(0.65)

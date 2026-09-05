@@ -1,6 +1,7 @@
 import SwiftUI
 import WebKit
 import Combine
+import FloatingTubeDomain
 
 public struct YouTubePlayerView: NSViewRepresentable {
     @ObservedObject var appState: AppState

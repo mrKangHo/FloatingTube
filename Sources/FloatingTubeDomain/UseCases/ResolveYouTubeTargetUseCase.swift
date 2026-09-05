@@ -1,71 +1,10 @@
 import Foundation
 
-public enum YouTubeTarget: Equatable, Codable {
-    case video(id: String, startTime: Int? = nil, playlistId: String? = nil)
-    case playlist(id: String)
-    case direct(url: URL)
+public struct ResolveYouTubeTargetUseCase: Sendable {
+    public init() {}
     
-    public var embedURL: URL? {
-        switch self {
-        case .video(let id, let startTime, let playlistId):
-            var components = URLComponents(string: "https://www.youtube-nocookie.com/embed/\(id)")
-            var queryItems = [
-                URLQueryItem(name: "enablejsapi", value: "1"),
-                URLQueryItem(name: "autoplay", value: "1"),
-                URLQueryItem(name: "playsinline", value: "1"),
-                URLQueryItem(name: "modestbranding", value: "1"),
-                URLQueryItem(name: "rel", value: "0"),
-                URLQueryItem(name: "iv_load_policy", value: "3"),
-                URLQueryItem(name: "origin", value: "https://www.youtube.com")
-            ]
-            if let start = startTime, start > 0 {
-                queryItems.append(URLQueryItem(name: "start", value: "\(start)"))
-            }
-            if let list = playlistId, !list.isEmpty {
-                queryItems.append(URLQueryItem(name: "list", value: list))
-            }
-            components?.queryItems = queryItems
-            return components?.url
-            
-        case .playlist(let id):
-            var components = URLComponents(string: "https://www.youtube-nocookie.com/embed/videoseries")
-            components?.queryItems = [
-                URLQueryItem(name: "list", value: id),
-                URLQueryItem(name: "enablejsapi", value: "1"),
-                URLQueryItem(name: "autoplay", value: "1"),
-                URLQueryItem(name: "playsinline", value: "1"),
-                URLQueryItem(name: "origin", value: "https://www.youtube.com")
-            ]
-            return components?.url
-            
-        case .direct(let url):
-            return url
-        }
-    }
-    
-    public var watchURLString: String {
-        switch self {
-        case .video(let id, let startTime, let playlistId):
-            var str = "https://www.youtube.com/watch?v=\(id)"
-            if let playlistId = playlistId, !playlistId.isEmpty {
-                str += "&list=\(playlistId)"
-            }
-            if let startTime = startTime, startTime > 0 {
-                str += "&t=\(startTime)s"
-            }
-            return str
-        case .playlist(let id):
-            return "https://www.youtube.com/playlist?list=\(id)"
-        case .direct(let url):
-            return url.absoluteString
-        }
-    }
-}
-
-public struct YouTubeURLParser {
-    
-    /// Parses any user input string (URL, Shorts, Embed, Video ID, Playlist, or Search) into a YouTubeTarget
-    public static func parse(_ input: String) -> YouTubeTarget? {
+    /// Parses any user input string (URL, Shorts, Embed, Video ID, Playlist, or Direct URL) into a YouTubeTarget
+    public func execute(_ input: String) -> YouTubeTarget? {
         let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty { return nil }
         
@@ -146,7 +85,7 @@ public struct YouTubeURLParser {
         return .direct(url: url)
     }
     
-    private static func parseQueryParams(url: URL) -> [String: String] {
+    private func parseQueryParams(url: URL) -> [String: String] {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
               let queryItems = components.queryItems else {
             return [:]
@@ -158,7 +97,7 @@ public struct YouTubeURLParser {
         return dict
     }
     
-    private static func parseStartTime(queryParams: [String: String]) -> Int? {
+    private func parseStartTime(queryParams: [String: String]) -> Int? {
         if let t = queryParams["t"] ?? queryParams["start"] {
             // Can be "120", "120s", "1m30s", "1h2m3s"
             if let seconds = Int(t.replacingOccurrences(of: "s", with: "")) {
@@ -189,5 +128,12 @@ public struct YouTubeURLParser {
             return total > 0 ? total : nil
         }
         return nil
+    }
+}
+
+// Convenience namespace alias matching previous API
+public enum YouTubeURLParser {
+    public static func parse(_ input: String) -> YouTubeTarget? {
+        ResolveYouTubeTargetUseCase().execute(input)
     }
 }

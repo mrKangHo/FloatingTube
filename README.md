@@ -98,43 +98,79 @@
 ### 요구 사양 (System Requirements)
 * **OS**: macOS 13.0 (Ventura) 이상
 * **Architecture**: Apple Silicon (M1/M2/M3/M4) 및 Intel x86_64 모두 완벽 지원
-* **Tools**: Swift 5.9+ / Xcode 15.0+
+* **Tools**: Swift 5.9+ / Xcode 15.0+ / Tuist 4.x+
 
-### 빌드 스크립트로 빌드하기 (권장)
+### Tuist로 Xcode 프로젝트 생성 및 개발하기 (권장)
 ```bash
 # 1. 저장소 복제
 git clone https://github.com/mrKangHo/FloatingTube.git
 cd FloatingTube
 
-# 2. 릴리즈 앱 번들 생성 스크립트 실행
+# 2. Tuist 프로젝트 및 워크스페이스 생성
+tuist generate
+
+# 3. FloatingTube.xcworkspace가 생성되며 Xcode에서 즉시 실행/디버깅 가능
+```
+
+### 빌드 스크립트로 번들링하기 (CLI)
+```bash
+# 릴리즈 앱 번들 생성 스크립트 실행
 chmod +x scripts/bundle_app.sh
 ./scripts/bundle_app.sh
 
-# 3. 앱 실행
+# 앱 실행
 open FloatingTube.app
 ```
 
 ---
 
-## 🏗️ 아키텍처 및 기술 스택 (Architecture)
+## 🏗️ 클린 아키텍처 및 모듈 구조 (Clean Architecture)
 
-FloatingTube는 외부 무거운 프레임워크(Electron 등)를 일체 사용하지 않고, 100% 순수 **Apple Swift 및 네이티브 프레임워크**로 제작되어 메모리 사용량이 극히 적고 배터리 효율이 뛰어납니다.
+FloatingTube는 관심사의 완벽한 분리와 높은 테스트 용이성을 보장하기 위해 **클린 아키텍처(Clean Architecture)** 및 **Tuist 기반 멀티 모듈** 설계를 채택하였습니다.
 
 ```mermaid
 graph TD
-    A[FloatingTubeApp / MenuBarExtra] --> B[AppState - Singleton State Manager]
-    B --> C[WindowManager - AppKit NSWindow]
-    B --> D[YouTubePlayerView - WKWebView]
-    B --> E[HeaderControlBar & BottomControlBar]
-    D --> F[Persistent Head CSS & Shadow DOM Event Proxy]
-    C --> G[Window Level, Alpha, IgnoresMouseEvents]
+    subgraph Presentation [FloatingTubePresentation]
+        V[SwiftUI Views] --> VM[AppState ViewModel]
+        VM --> WMP[WindowManager]
+    end
+
+    subgraph Domain [FloatingTubeDomain - Core Business Logic]
+        E[Entities: YouTubeTarget, PlayHistoryItem, WindowPreferences]
+        U1[ResolveYouTubeTargetUseCase]
+        U2[ManageHistoryUseCase]
+        U3[PasteAndResolveUseCase]
+        U4[ManagePreferencesUseCase]
+        R1[HistoryRepositoryProtocol]
+        R2[PreferencesRepositoryProtocol]
+        R3[PasteboardServiceProtocol]
+        R4[WindowManagerProtocol]
+    end
+
+    subgraph Data [FloatingTubeData - Implementation]
+        DR1[UserDefaultsHistoryRepository] --> R1
+        DR2[UserDefaultsPreferencesRepository] --> R2
+        DS1[NSPasteboardService] --> R3
+    end
+
+    subgraph App [FloatingTube App Target]
+        Main[FloatingTubeApp] --> DI[AppDIContainer]
+    end
+
+    VM --> U1
+    VM --> U2
+    VM --> U3
+    VM --> U4
+    WMP --> R4
+    DI --> Data
+    DI --> Domain
+    DI --> Presentation
 ```
 
-* **Core Framework**: SwiftUI + AppKit
-* **Rendering Engine**: WebKit (`WKWebView`)
-* **DOM Event Pipeline**: Shadow DOM Pierce (`e.composedPath()`) & Head Stylesheet Injection
-* **State Management**: Combine (`ObservableObject`, `@Published`)
-* **Window Management**: `NSWindow` FullSizeContentView & Level Floating
+* **FloatingTubeDomain**: 외부 의존성(AppKit/SwiftUI/UserDefaults)이 전혀 없는 순수 비즈니스 로직, 엔티티, 유스케이스, 리포지토리 인터페이스.
+* **FloatingTubeData**: `UserDefaults`, `NSPasteboard` 등 외부 플랫폼/데이터 저장소를 사용하는 리포지토리 및 서비스 구현체.
+* **FloatingTubePresentation**: SwiftUI 뷰, AppState 뷰모델, 컴포넌트, 다국어(L10n) 및 윈도우 매니저.
+* **FloatingTube (App)**: 의존성 주입(`AppDIContainer`), 앱 수명주기(`FloatingTubeApp`), 메뉴바 엑스트라 및 리소스.
 
 ---
 
@@ -142,25 +178,30 @@ graph TD
 
 ```
 FloatingTube/
-├── Sources/FloatingTube/
-│   ├── FloatingTubeApp.swift         # 앱 시작점, WindowGroup, MenuBarExtra 트레이
-│   ├── Models/
-│   │   ├── AppState.swift            # 전역 반응형 상태 관리자
-│   │   └── PlayHistoryItem.swift     # 시청 기록 및 즐겨찾기 모델
-│   ├── Services/
-│   │   ├── WindowManager.swift       # 윈도우 레벨, 투명도, 마우스 관통 제어
-│   │   └── YouTubeURLParser.swift    # 링크 및 영상 ID 정규식 파서
-│   └── Views/
-│       ├── MainContainerView.swift   # 메인 컨테이너 및 전역 키보드 단축키
-│       ├── YouTubePlayerView.swift   # WKWebView 엔진 및 인앱 전체화면 스크립트
-│       ├── HeaderControlBar.swift    # 슬림 검색 및 뷰 모드 전환 바
-│       ├── BottomControlBar.swift    # 미니멀 플레이어 컨트롤 바
-│       ├── MenuBarContentView.swift  # macOS 상단 메뉴바 트레이 뷰
-│       ├── HistorySheetView.swift    # 시청 기록 및 북마크 팝업
-│       └── ShortcutsSheetView.swift  # 단축키 안내 팝업
-├── Tests/FloatingTubeTests/          # 단위 테스트 슈트
-├── scripts/bundle_app.sh             # 릴리즈 자동 번들링 스크립트
-└── Package.swift                     # SPM 패키지 매니페스트
+├── Project.swift                          # Tuist 프로젝트 매니페스트 (멀티 타깃 정의)
+├── Package.swift                          # SPM 패키지 매니페스트
+├── Sources/
+│   ├── FloatingTube/                      # [App Target] 애플리케이션 진입점 & DI
+│   │   ├── FloatingTubeApp.swift          # @main 앱 시작점 & MenuBarExtra
+│   │   ├── AppDIContainer.swift           # 의존성 주입 컨테이너 (Composition Root)
+│   │   └── Resources/                     # AppIcon.icns, AppIcon.png
+│   ├── FloatingTubeDomain/                # [Domain Layer] 순수 비즈니스 도메인
+│   │   ├── Entities/                      # YouTubeTarget, PlayHistoryItem, WindowPreferences
+│   │   ├── Interfaces/                    # Repository & Service Protocols
+│   │   └── UseCases/                      # ResolveTarget, ManageHistory, PasteResolve 등
+│   ├── FloatingTubeData/                  # [Data Layer] 인프라 및 저장소 구현체
+│   │   ├── Repositories/                  # UserDefaultsHistoryRepository 등
+│   │   └── Services/                      # NSPasteboardService
+│   └── FloatingTubePresentation/          # [Presentation Layer] UI & ViewModel
+│       ├── ViewModels/                    # AppState
+│       ├── Services/                      # WindowManager, WindowAccessor
+│       ├── Localization/                  # Localization (L10n, Language)
+│       └── Views/                         # MainContainerView, YouTubePlayerView 등
+├── Tests/
+│   ├── FloatingTubeDomainTests/           # 도메인 유스케이스 & 파서 단위 테스트
+│   └── FloatingTubeDataTests/             # 저장소 직렬화 & 영속화 단위 테스트
+└── scripts/
+    └── bundle_app.sh                      # 릴리즈 자동 번들링 스크립트
 ```
 
 ---

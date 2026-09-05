@@ -1,4 +1,5 @@
 import SwiftUI
+import FloatingTubeDomain
 
 public struct HistorySheetView: View {
     @ObservedObject var appState: AppState

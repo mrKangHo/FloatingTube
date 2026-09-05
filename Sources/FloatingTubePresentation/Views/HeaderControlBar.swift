@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import FloatingTubeDomain
 
 public struct HeaderControlBar: View {
     @ObservedObject var appState: AppState

@@ -1,9 +1,10 @@
 import AppKit
 import SwiftUI
 import Combine
+import FloatingTubeDomain
 
 @MainActor
-public class WindowManager: NSObject, ObservableObject, NSWindowDelegate {
+public class WindowManager: NSObject, ObservableObject, NSWindowDelegate, WindowManagerProtocol {
     public static let shared = WindowManager()
     
     public weak var activeWindow: NSWindow? {
@@ -12,6 +13,8 @@ public class WindowManager: NSObject, ObservableObject, NSWindowDelegate {
         }
     }
     @Published public var currentSize: CGSize = CGSize(width: 640, height: 360)
+    @Published public var isFillScreen: Bool = false
+    private var preFullscreenFrame: NSRect?
     
     public override init() {
         super.init()
@@ -88,9 +91,6 @@ public class WindowManager: NSObject, ObservableObject, NSWindowDelegate {
         window.setFrame(currentFrame, display: true, animate: true)
         self.currentSize = currentFrame.size
     }
-    
-    private var preFullscreenFrame: NSRect?
-    @Published public var isFillScreen: Bool = false
     
     public func toggleFillScreen() {
         guard let window = activeWindow else { return }
