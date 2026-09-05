@@ -100,6 +100,34 @@ let project = Project(
                 .target(name: "FloatingTubeData"),
                 .target(name: "FloatingTubeDomain")
             ]
+        ),
+        
+        // 7. Presentation Unit Tests
+        .target(
+            name: "FloatingTubePresentationTests",
+            destinations: .macOS,
+            product: .unitTests,
+            bundleId: "com.antigravity.FloatingTube.presentationTests",
+            deploymentTargets: .macOS("13.0"),
+            infoPlist: .default,
+            sources: ["Tests/FloatingTubePresentationTests/**"],
+            dependencies: [
+                .target(name: "FloatingTubePresentation"),
+                .target(name: "FloatingTubeDomain")
+            ]
+        )
+    ],
+    schemes: [
+        .scheme(
+            name: "FloatingTube",
+            shared: true,
+            buildAction: .buildAction(targets: ["FloatingTube"]),
+            testAction: .targets([
+                "FloatingTubeDomainTests",
+                "FloatingTubeDataTests",
+                "FloatingTubePresentationTests"
+            ]),
+            runAction: .runAction(executable: "FloatingTube")
         )
     ]
 )

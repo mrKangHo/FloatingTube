@@ -199,7 +199,8 @@ FloatingTube/
 │       └── Views/                         # MainContainerView, YouTubePlayerView 등
 ├── Tests/
 │   ├── FloatingTubeDomainTests/           # 도메인 유스케이스 & 파서 단위 테스트
-│   └── FloatingTubeDataTests/             # 저장소 직렬화 & 영속화 단위 테스트
+│   ├── FloatingTubeDataTests/             # 저장소 직렬화 & 영속화 단위 테스트
+│   └── FloatingTubePresentationTests/     # 뷰모델 및 프레젠테이션 로직 단위 테스트
 └── scripts/
     └── bundle_app.sh                      # 릴리즈 자동 번들링 스크립트
 ```

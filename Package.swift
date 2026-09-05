@@ -44,6 +44,10 @@ let package = Package(
         .testTarget(
             name: "FloatingTubeDataTests",
             dependencies: ["FloatingTubeData", "FloatingTubeDomain"]
+        ),
+        .testTarget(
+            name: "FloatingTubePresentationTests",
+            dependencies: ["FloatingTubePresentation", "FloatingTubeDomain"]
         )
     ]
 )

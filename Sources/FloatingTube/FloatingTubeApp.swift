@@ -16,7 +16,7 @@ struct FloatingTubeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            MainContainerView()
+            MainContainerView(appState: appState)
                 .ignoresSafeArea(.all)
         }
         .windowStyle(.hiddenTitleBar)
