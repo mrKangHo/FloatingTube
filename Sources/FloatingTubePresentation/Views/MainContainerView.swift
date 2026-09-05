@@ -1,12 +1,17 @@
 import SwiftUI
 import AppKit
 
+@MainActor
 public struct MainContainerView: View {
     @ObservedObject private var appState: AppState
     @State private var hoverTimer: DispatchWorkItem?
     
-    public init(appState: AppState = AppState.shared) {
+    public init(appState: AppState) {
         self.appState = appState
+    }
+    
+    public init() {
+        self.appState = AppState.shared
     }
     
     public var body: some View {
