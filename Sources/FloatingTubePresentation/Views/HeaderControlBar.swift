@@ -14,7 +14,7 @@ public struct HeaderControlBar: View {
     public var body: some View {
         HStack(spacing: 8) {
             // Interactive macOS Window Traffic Lights
-            MacOSTrafficLights()
+            MacOSTrafficLights(windowManager: appState.windowManager)
                 .padding(.leading, 4)
             
             // Drag handle spacer

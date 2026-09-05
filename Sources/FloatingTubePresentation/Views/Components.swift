@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import FloatingTubeDomain
 
 // MARK: - Visual Effect (Glassmorphism)
 public struct VisualEffectBlur: NSViewRepresentable {
@@ -158,11 +159,18 @@ public struct KeyCapView: View {
 }
 
 // MARK: - macOS Window Traffic Light Controls with Hover Overlay
+@MainActor
 public struct MacOSTrafficLights: View {
-    @ObservedObject var windowManager = WindowManager.shared
+    private let windowManager: WindowManagerProtocol
     @State private var isHovered = false
     
-    public init() {}
+    public init(windowManager: WindowManagerProtocol) {
+        self.windowManager = windowManager
+    }
+    
+    public init() {
+        self.windowManager = WindowManager.shared
+    }
     
     public var body: some View {
         HStack(spacing: 7) {

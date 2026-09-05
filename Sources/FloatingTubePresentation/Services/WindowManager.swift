@@ -138,6 +138,11 @@ public class WindowManager: NSObject, ObservableObject, NSWindowDelegate, Window
         toggleFillScreen()
     }
     
+    public func bringToFront() {
+        NSApp.activate(ignoringOtherApps: true)
+        activeWindow?.makeKeyAndOrderFront(nil)
+    }
+    
     // NSWindowDelegate
     public func windowDidResize(_ notification: Notification) {
         if let window = notification.object as? NSWindow {

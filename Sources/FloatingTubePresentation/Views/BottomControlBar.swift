@@ -91,15 +91,13 @@ public struct BottomControlBar: View {
                 .help("\(L10n.toggleFullscreen) (F)")
                 
                 // Open in External Browser
-                if let target = appState.currentTarget {
+                if appState.currentTarget != nil {
                     TubeIconButton(
                         icon: "arrow.up.right.square",
                         isActive: false,
                         activeColor: .white
                     ) {
-                        if let url = URL(string: target.watchURLString) {
-                            NSWorkspace.shared.open(url)
-                        }
+                        appState.openInExternalBrowser()
                     }
                     .help(L10n.openInBrowserTooltip)
                 }

@@ -169,7 +169,6 @@ public struct MenuBarContentView: View {
     }
     
     private func bringAppToFront() {
-        NSApp.activate(ignoringOtherApps: true)
-        WindowManager.shared.activeWindow?.makeKeyAndOrderFront(nil)
+        appState.bringToFront()
     }
 }

@@ -13,7 +13,7 @@ public class AppState: ObservableObject {
     private let manageHistoryUseCase: ManageHistoryUseCase
     private let pasteAndResolveUseCase: PasteAndResolveUseCase
     private let preferencesUseCase: ManagePreferencesUseCase
-    private let windowManager: WindowManagerProtocol
+    public let windowManager: WindowManagerProtocol
     
     @Published public var currentTarget: YouTubeTarget?
     @Published public var videoTitle: String = ""
@@ -212,6 +212,27 @@ public class AppState: ObservableObject {
     public func setPresetSize(width: CGFloat, height: CGFloat, label: String) {
         windowManager.setSizePreset(width: width, height: height)
         showStatus("\(label)")
+    }
+    
+    public func bringToFront() {
+        windowManager.bringToFront()
+    }
+    
+    public func closeWindow() {
+        windowManager.closeWindow()
+    }
+    
+    public func minimizeWindow() {
+        windowManager.minimizeWindow()
+    }
+    
+    public func toggleZoom() {
+        windowManager.toggleZoom()
+    }
+    
+    public func openInExternalBrowser() {
+        guard let target = currentTarget, let url = URL(string: target.watchURLString) else { return }
+        NSWorkspace.shared.open(url)
     }
     
     public func isCurrentTargetBookmarked() -> Bool {

@@ -23,6 +23,7 @@ final class MockWindowManager: WindowManagerProtocol {
     var closeWindowCalled = false
     var minimizeWindowCalled = false
     var toggleZoomCalled = false
+    var bringToFrontCalled = false
     
     func setAlwaysOnTop(_ enabled: Bool) { setAlwaysOnTopCalledWith = enabled }
     func setAspectRatioLocked(_ locked: Bool) { setAspectRatioLockedCalledWith = locked }
@@ -35,6 +36,7 @@ final class MockWindowManager: WindowManagerProtocol {
     func closeWindow() { closeWindowCalled = true }
     func minimizeWindow() { minimizeWindowCalled = true }
     func toggleZoom() { toggleZoomCalled = true }
+    func bringToFront() { bringToFrontCalled = true }
 }
 
 final class MockPresentationHistoryRepo: HistoryRepositoryProtocol, @unchecked Sendable {
@@ -271,5 +273,22 @@ struct AppStateTests {
         sut.clearHistory()
         #expect(sut.history.isEmpty)
         #expect(historyRepo.history.isEmpty)
+    }
+    
+    @Test("Window operation delegations delegate to windowManager")
+    func testWindowDelegations() {
+        let (sut, _, _, winMgr) = makeSUT()
+        
+        sut.bringToFront()
+        #expect(winMgr.bringToFrontCalled == true)
+        
+        sut.closeWindow()
+        #expect(winMgr.closeWindowCalled == true)
+        
+        sut.minimizeWindow()
+        #expect(winMgr.minimizeWindowCalled == true)
+        
+        sut.toggleZoom()
+        #expect(winMgr.toggleZoomCalled == true)
     }
 }

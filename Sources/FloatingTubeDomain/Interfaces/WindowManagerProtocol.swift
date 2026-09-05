@@ -17,4 +17,5 @@ public protocol WindowManagerProtocol: AnyObject {
     func closeWindow()
     func minimizeWindow()
     func toggleZoom()
+    func bringToFront()
 }
