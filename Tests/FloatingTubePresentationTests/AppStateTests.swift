@@ -291,4 +291,31 @@ struct AppStateTests {
         sut.toggleZoom()
         #expect(winMgr.toggleZoomCalled == true)
     }
+    
+    @Test("openLogin sets clean mode to false, directs to Google login, and shows status")
+    func testOpenLogin() {
+        let (sut, _, _, _) = makeSUT()
+        sut.isCleanMode = true
+        
+        sut.openLogin()
+        #expect(sut.isCleanMode == false)
+        if case .direct(let url)? = sut.currentTarget {
+            #expect(url.absoluteString.contains("accounts.google.com"))
+        } else {
+            Issue.record("Expected currentTarget to be direct Google login URL")
+        }
+        #expect(sut.statusMessage == L10n.statusLoginRedirect)
+    }
+    
+    @Test("reloadVideo emits location.reload command and shows status")
+    func testReloadVideo() {
+        let (sut, _, _, _) = makeSUT()
+        var emittedCommands: [String] = []
+        let cancellable = sut.webViewCommandPublisher.sink { emittedCommands.append($0) }
+        _ = cancellable
+        
+        sut.reloadVideo()
+        #expect(emittedCommands.contains("location.reload();"))
+        #expect(sut.statusMessage == L10n.reloadVideo)
+    }
 }

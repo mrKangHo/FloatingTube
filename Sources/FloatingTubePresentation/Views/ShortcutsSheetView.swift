@@ -49,7 +49,7 @@ public struct ShortcutsSheetView: View {
                     shortcutRow(keys: ["Space"], description: "\(L10n.play) / \(L10n.pause)")
                     shortcutRow(keys: ["M"], description: "\(L10n.mute) / \(L10n.unmute)")
                     shortcutRow(keys: ["⌘", "R"], description: L10n.reloadVideo)
-                    shortcutRow(keys: ["⌘", "1~4"], description: "창 크기 조절 (소형 ~ 특대형)")
+                    shortcutRow(keys: ["⌘", "1~4"], description: L10n.windowPresetShortcutDesc)
                     shortcutRow(keys: ["⌘", "Q"], description: L10n.quitApp)
                 }
                 .padding(12)

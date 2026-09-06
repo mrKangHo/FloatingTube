@@ -50,7 +50,7 @@ public struct MainContainerView: View {
                         Image(systemName: "cursorarrow.rays")
                             .font(.system(size: 11, weight: .bold))
                             .foregroundColor(.orange)
-                        Text("마우스 관통 중 (해제: ⌘⇧C)")
+                        Text(L10n.clickThroughWarningPill)
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundColor(.white)
                     }
@@ -192,22 +192,22 @@ public struct MainContainerView: View {
             
             // Cmd + 1: Small (360x202)
             if flags == [.command] && event.charactersIgnoringModifiers == "1" {
-                appState.setPresetSize(width: 360, height: 202.5, label: "소형")
+                appState.setPresetSize(width: 360, height: 202.5, label: L10n.presetSmall)
                 return nil
             }
             // Cmd + 2: Medium (512x288)
             if flags == [.command] && event.charactersIgnoringModifiers == "2" {
-                appState.setPresetSize(width: 512, height: 288, label: "중형")
+                appState.setPresetSize(width: 512, height: 288, label: L10n.presetMedium)
                 return nil
             }
             // Cmd + 3: Large (720x405)
             if flags == [.command] && event.charactersIgnoringModifiers == "3" {
-                appState.setPresetSize(width: 720, height: 405, label: "대형")
+                appState.setPresetSize(width: 720, height: 405, label: L10n.presetLarge)
                 return nil
             }
             // Cmd + 4: Extra Large (960x540)
             if flags == [.command] && event.charactersIgnoringModifiers == "4" {
-                appState.setPresetSize(width: 960, height: 540, label: "특대형")
+                appState.setPresetSize(width: 960, height: 540, label: L10n.presetExtraLarge)
                 return nil
             }
             

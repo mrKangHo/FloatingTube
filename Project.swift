@@ -117,4 +117,31 @@ let project = Project(
             ]
         )
     ],
+    schemes: [
+        .scheme(
+            name: "FloatingTube",
+            shared: true,
+            buildAction: .buildAction(targets: ["FloatingTube"]),
+            testAction: .targets([
+                .testableTarget(target: "FloatingTubeDomainTests"),
+                .testableTarget(target: "FloatingTubeDataTests"),
+                .testableTarget(target: "FloatingTubePresentationTests")
+            ]),
+            runAction: .runAction(executable: "FloatingTube")
+        ),
+        .scheme(
+            name: "FloatingTube-AllTests",
+            shared: true,
+            buildAction: .buildAction(targets: [
+                "FloatingTubeDomainTests",
+                "FloatingTubeDataTests",
+                "FloatingTubePresentationTests"
+            ]),
+            testAction: .targets([
+                .testableTarget(target: "FloatingTubeDomainTests"),
+                .testableTarget(target: "FloatingTubeDataTests"),
+                .testableTarget(target: "FloatingTubePresentationTests")
+            ])
+        )
+    ]
 )

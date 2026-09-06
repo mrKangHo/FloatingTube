@@ -91,6 +91,8 @@ public struct YouTubePlayerView: NSViewRepresentable {
         """
         
         let initialClean = appState.isCleanMode
+        let msgFullscreen = L10n.statusInAppFullscreen.replacingOccurrences(of: "\"", with: "\\\"")
+        let msgReturnWeb = L10n.statusReturnToWeb.replacingOccurrences(of: "\"", with: "\\\"")
         let script = """
         (function() {
             var cssText = `\(fsCSS.replacingOccurrences(of: "\n", with: " "))`;
@@ -118,7 +120,7 @@ public struct YouTubePlayerView: NSViewRepresentable {
                 window.dispatchEvent(new Event('resize'));
                 post({
                     type: 'status',
-                    message: enable ? "창 맞춤 전체화면 (해제: Esc 또는 F)" : "유튜브 웹 화면으로 복귀"
+                    message: enable ? "\(msgFullscreen)" : "\(msgReturnWeb)"
                 });
             }
 

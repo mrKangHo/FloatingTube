@@ -1,7 +1,6 @@
 import SwiftUI
 import AppKit
 import FloatingTubeDomain
-import FloatingTubeData
 import FloatingTubePresentation
 
 @main

@@ -24,7 +24,8 @@ let package = Package(
         ),
         .target(
             name: "FloatingTubePresentation",
-            dependencies: ["FloatingTubeDomain"]
+            dependencies: ["FloatingTubeDomain"],
+            path: "Sources/FloatingTubePresentation"
         ),
         .executableTarget(
             name: "FloatingTube",

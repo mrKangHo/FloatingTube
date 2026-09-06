@@ -205,4 +205,30 @@ public struct L10n {
     public static var shortcutsTitle: String {
         isKorean ? "키보드 단축키 안내" : "Keyboard Shortcuts"
     }
+    
+    // Window Presets & Controls
+    public static var presetSmall: String {
+        isKorean ? "소형" : "Small"
+    }
+    public static var presetMedium: String {
+        isKorean ? "중형" : "Medium"
+    }
+    public static var presetLarge: String {
+        isKorean ? "대형" : "Large"
+    }
+    public static var presetExtraLarge: String {
+        isKorean ? "특대형" : "Extra Large"
+    }
+    public static var clickThroughWarningPill: String {
+        isKorean ? "마우스 관통 중 (해제: ⌘⇧C)" : "Click-Through Active (Disable: ⌘⇧C)"
+    }
+    public static var controlsPinnedTooltip: String {
+        isKorean ? "컨트롤 고정됨 (Hover 없어도 유지)" : "Controls Pinned (Always visible)"
+    }
+    public static var controlsAutoTooltip: String {
+        isKorean ? "컨트롤 자동 숨김 모드" : "Controls Auto-Hide"
+    }
+    public static var windowPresetShortcutDesc: String {
+        isKorean ? "창 크기 조절 (소형 ~ 특대형)" : "Window Size Presets (Small ~ XL)"
+    }
 }

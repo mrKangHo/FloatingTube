@@ -78,7 +78,7 @@ public struct BottomControlBar: View {
                         appState.isControlsPinned.toggle()
                     }
                 }
-                .help(appState.isControlsPinned ? "컨트롤 고정됨 (Hover 없어도 유지)" : "컨트롤 자동 숨김 모드")
+                .help(appState.isControlsPinned ? L10n.controlsPinnedTooltip : L10n.controlsAutoTooltip)
                 
                 // In-App Fullscreen Toggle
                 TubeIconButton(
