@@ -3,8 +3,12 @@
 /Packages
 xcuserdata/
 DerivedData/
+Derived/
 .swiftpm/
 FloatingTube.app/
+*.xcodeproj
+*.xcworkspace
 *.swp
 *.lock
 .netrc
+.tuist-cache/

@@ -1,48 +1,53 @@
 import SwiftUI
 import AppKit
+import FloatingTubeDomain
+import FloatingTubePresentation
 
 @main
 struct FloatingTubeApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @ObservedObject private var appState = AppState.shared
+    @ObservedObject private var appState: AppState
+    
+    init() {
+        let container = AppDIContainer.shared
+        self._appState = ObservedObject(wrappedValue: container.appState)
+    }
     
     var body: some Scene {
         WindowGroup {
-            MainContainerView()
+            MainContainerView(appState: appState)
                 .ignoresSafeArea(.all)
         }
         .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) {
                 Button(L10n.playClipboardLink) {
-                    AppState.shared.pasteAndPlayFromClipboard()
+                    appState.pasteAndPlayFromClipboard()
                 }
                 .keyboardShortcut("v", modifiers: [.command])
                 
                 Button(L10n.alwaysOnTop) {
-                    AppState.shared.toggleAlwaysOnTop()
+                    appState.toggleAlwaysOnTop()
                 }
                 .keyboardShortcut("t", modifiers: [.command])
                 
                 Button(L10n.reloadVideo) {
-                    AppState.shared.reloadVideo()
+                    appState.reloadVideo()
                 }
                 .keyboardShortcut("r", modifiers: [.command])
             }
             
             CommandMenu(L10n.viewMenu) {
                 Button(L10n.cleanPlayerView) {
-                    AppState.shared.isCleanMode = true
-                    AppState.shared.toggleCleanMode()
+                    appState.setCleanMode(true)
                 }
                 
                 Button(L10n.youtubeWebView) {
-                    AppState.shared.isCleanMode = false
-                    AppState.shared.toggleCleanMode()
+                    appState.setCleanMode(false)
                 }
                 
                 Button(L10n.toggleFullscreen) {
-                    AppState.shared.webViewCommandPublisher.send("player.toggleFullscreen();")
+                    appState.webViewCommandPublisher.send("player.toggleFullscreen();")
                 }
                 .keyboardShortcut("f", modifiers: [])
             }
@@ -50,7 +55,7 @@ struct FloatingTubeApp: App {
         
         // macOS Status Bar (Menu Bar Extra Item)
         MenuBarExtra("FloatingTube", systemImage: "play.rectangle.fill") {
-            MenuBarContentView(appState: AppState.shared)
+            MenuBarContentView(appState: appState)
         }
     }
 }

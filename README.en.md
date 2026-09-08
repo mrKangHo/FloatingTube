@@ -1,37 +1,49 @@
+🇰🇷 [한국어](README.md) | 🇺🇸 [English](README.en.md) | 🇯🇵 [日本語](README.ja.md) | 🇨🇳 [中文](README.zh.md)
+
+<p align="center">
+  <img src="docs/icon.png" width="128" height="128" alt="FloatingTube Logo" />
+</p>
+
+<h1 align="center">📺 FloatingTube</h1>
+
+<p align="center">
+  <b>Lightweight Floating YouTube Player for macOS</b><br/>
+  <i>Always-on-Top Floating YouTube Player with In-App Fullscreen & Click-Through Mode</i>
+</p>
+
+<p align="center">
+  <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white" alt="Swift" /></a>
+  <a href="https://apple.com/macos"><img src="https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white" alt="macOS" /></a>
+  <a href="https://github.com/mrKangHo/FloatingTube/releases/latest"><img src="https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release" alt="Release" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License" /></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip">
+    <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.1.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
+  </a>
+</p>
+
+<p align="center">
+  <img src="docs/screenshot.png" alt="FloatingTube Screenshot" width="800" />
+</p>
+
 <div align="center">
-
-<img src="Sources/FloatingTube/Resources/AppIcon.png" width="128" height="128" alt="FloatingTube Logo" />
-
-# 📺 FloatingTube
-
-### **Lightweight Floating YouTube Player for macOS**
-*Always-on-Top Floating YouTube Player with In-App Fullscreen & Click-Through Mode*
-
-[ 🇰🇷 한국어 ](README.md) | [ 🇺🇸 English ](README.en.md)
-
-<br/>
-
-[![Swift](https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white)](https://swift.org)
-[![macOS](https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white)](https://apple.com/macos)
-[![Release](https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release)](https://github.com/mrKangHo/FloatingTube/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
-
-<br/>
-
-<a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip">
-  <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.1.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
-</a>
-
-<br/><br/>
-
-**Watch YouTube effortlessly while coding, designing, writing documents, or browsing without covering your workspace.**  
-Going far beyond basic Picture-in-Picture (PiP) limitations, FloatingTube provides **Window-Confined In-App Fullscreen**, **Mouse Click-Through Mode**, **macOS Status Bar Tray Control**, **Login Persistence**, and a native macOS experience.
-
+<b>Watch YouTube effortlessly while coding, designing, writing documents, or browsing without covering your workspace.</b><br/>
+Going far beyond basic Picture-in-Picture (PiP) limitations, FloatingTube provides <b>Window-Confined In-App Fullscreen</b>, <b>Mouse Click-Through Mode</b>, <b>macOS Status Bar Tray Control</b>, <b>Login Persistence</b>, and a native macOS experience.
 </div>
 
 ---
 
-## 📥 Quick Download & Installation
+## 📥 Installation
+
+### Homebrew
+```bash
+brew tap mrKangHo/tap
+brew install floatingtube
+```
+
+### Direct Download
 
 You can use the latest pre-built application directly:
 
@@ -97,33 +109,44 @@ You can use the latest pre-built application directly:
 ### Requirements
 * macOS 13.0 (Ventura) or later
 * Apple Silicon (M1/M2/M3/M4) or Intel x86_64 Mac
-* Swift 5.9+ / Xcode 15.0+
+* Swift 5.9+ / Xcode 15.0+ / Tuist 4.x+
 
-### Build via Script
+### Generate Xcode Project with Tuist (Recommended)
 ```bash
 # 1. Clone repository
 git clone https://github.com/mrKangHo/FloatingTube.git
 cd FloatingTube
 
-# 2. Build release bundle
+# 2. Generate Xcode workspace using Tuist
+./scripts/generate_project.sh
+# or directly: tuist generate
+
+# 3. Run all unit tests
+./scripts/run_tests.sh
+
+# 4. Open FloatingTube.xcworkspace and build/run directly in Xcode
+```
+
+### Build via Script (CLI)
+```bash
+# Build release bundle
 chmod +x scripts/bundle_app.sh
 ./scripts/bundle_app.sh
 
-# 3. Launch application
+# Launch application
 open FloatingTube.app
 ```
 
 ---
 
-## 🏗️ Architecture & Tech Stack
+## 🏗️ Clean Architecture & Modules
 
-FloatingTube is built purely with **native Apple Swift and AppKit/SwiftUI frameworks** without heavy Electron runtimes, ensuring minimal memory footprint and high battery efficiency.
+FloatingTube is structured with **Clean Architecture** principles and modularized via **Tuist**:
 
-* **Core UI**: SwiftUI + AppKit
-* **Render Pipeline**: WebKit (`WKWebView`)
-* **DOM Event Pipeline**: Shadow DOM Pierce (`e.composedPath()`) & Head Stylesheet Injection
-* **State Management**: Combine (`ObservableObject`, `@Published`)
-* **Window System**: `NSWindow` FullSizeContentView & Level Floating
+* **`FloatingTubeDomain`**: Pure business models (`YouTubeTarget`, `PlayHistoryItem`, `WindowPreferences`), UseCases (`ResolveYouTubeTargetUseCase`, `ManageHistoryUseCase`, `PasteAndResolveUseCase`), and repository contracts.
+* **`FloatingTubeData`**: Concrete implementations of repositories and system services (`UserDefaultsHistoryRepository`, `UserDefaultsPreferencesRepository`, `NSPasteboardService`).
+* **`FloatingTubePresentation`**: UI layer featuring SwiftUI views, `AppState` ViewModel, `WindowManager`, and localizations.
+* **`FloatingTube` (App Target)**: Application entry point (`@main`), composition root (`AppDIContainer`), menu bar item, and bundled resources.
 
 ---
 
