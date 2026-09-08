@@ -1,37 +1,49 @@
+🇰🇷 [한국어](README.md) | 🇺🇸 [English](README.en.md) | 🇯🇵 [日本語](README.ja.md) | 🇨🇳 [中文](README.zh.md)
+
+<p align="center">
+  <img src="docs/icon.png" width="128" height="128" alt="FloatingTube Logo" />
+</p>
+
+<h1 align="center">📺 FloatingTube</h1>
+
+<p align="center">
+  <b>macOS 전용 초경량 플로팅 유튜브 플레이어</b><br/>
+  <i>Always-on-Top Floating YouTube Player with In-App Fullscreen & Click-Through Mode</i>
+</p>
+
+<p align="center">
+  <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white" alt="Swift" /></a>
+  <a href="https://apple.com/macos"><img src="https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white" alt="macOS" /></a>
+  <a href="https://github.com/mrKangHo/FloatingTube/releases/latest"><img src="https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release" alt="Release" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License" /></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip">
+    <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.1.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
+  </a>
+</p>
+
+<p align="center">
+  <img src="docs/screenshot.png" alt="FloatingTube Screenshot" width="800" />
+</p>
+
 <div align="center">
-
-<img src="Sources/FloatingTube/Resources/AppIcon.png" width="128" height="128" alt="FloatingTube Logo" />
-
-# 📺 FloatingTube
-
-### **macOS 전용 초경량 플로팅 유튜브 플레이어**
-*Always-on-Top Floating YouTube Player with In-App Fullscreen & Click-Through Mode*
-
-[ 🇰🇷 한국어 ](README.md) | [ 🇺🇸 English ](README.en.md)
-
-<br/>
-
-[![Swift](https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white)](https://swift.org)
-[![macOS](https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white)](https://apple.com/macos)
-[![Release](https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release)](https://github.com/mrKangHo/FloatingTube/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
-
-<br/>
-
-<a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip">
-  <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.1.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
-</a>
-
-<br/><br/>
-
-**코딩, 디자인, 문서 작업, 웹 서핑 중에도 작업 화면을 가리지 않고 유튜브를 자유롭게 감상하세요.**  
-기본 PiP(화면 속 화면)의 제한을 뛰어넘어, **창 크기 맞춤 전체화면**, **마우스 관통 모드**, **상태표시줄 제어**, **로그인 유지** 등 완벽한 멀티태스킹 환경을 제공합니다.
-
+<b>코딩, 디자인, 문서 작업, 웹 서핑 중에도 작업 화면을 가리지 않고 유튜브를 자유롭게 감상하세요.</b><br/>
+기본 PiP(화면 속 화면)의 제한을 뛰어넘어, <b>창 크기 맞춤 전체화면</b>, <b>마우스 관통 모드</b>, <b>상태표시줄 제어</b>, <b>로그인 유지</b> 등 완벽한 멀티태스킹 환경을 제공합니다.
 </div>
 
 ---
 
-## 📥 간편 다운로드 및 설치 (Download & Install)
+## 📥 설치 (Installation)
+
+### Homebrew
+```bash
+brew tap mrKangHo/tap
+brew install floatingtube
+```
+
+### 직접 다운로드 (Direct Download)
 
 소스를 직접 빌드하지 않고 완성된 최신 앱을 바로 사용하실 수 있습니다:
 
