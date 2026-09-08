@@ -1,37 +1,49 @@
+🇰🇷 [한국어](README.md) | 🇺🇸 [English](README.en.md) | 🇯🇵 [日本語](README.ja.md) | 🇨🇳 [中文](README.zh.md)
+
+<p align="center">
+  <img src="docs/icon.png" width="128" height="128" alt="FloatingTube Logo" />
+</p>
+
+<h1 align="center">📺 FloatingTube</h1>
+
+<p align="center">
+  <b>Lightweight Floating YouTube Player for macOS</b><br/>
+  <i>Always-on-Top Floating YouTube Player with In-App Fullscreen & Click-Through Mode</i>
+</p>
+
+<p align="center">
+  <a href="https://swift.org"><img src="https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white" alt="Swift" /></a>
+  <a href="https://apple.com/macos"><img src="https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white" alt="macOS" /></a>
+  <a href="https://github.com/mrKangHo/FloatingTube/releases/latest"><img src="https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release" alt="Release" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=flat" alt="License" /></a>
+</p>
+
+<p align="center">
+  <a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip">
+    <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.1.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
+  </a>
+</p>
+
+<p align="center">
+  <img src="docs/screenshot.png" alt="FloatingTube Screenshot" width="800" />
+</p>
+
 <div align="center">
-
-<img src="Sources/FloatingTube/Resources/AppIcon.png" width="128" height="128" alt="FloatingTube Logo" />
-
-# 📺 FloatingTube
-
-### **Lightweight Floating YouTube Player for macOS**
-*Always-on-Top Floating YouTube Player with In-App Fullscreen & Click-Through Mode*
-
-[ 🇰🇷 한국어 ](README.md) | [ 🇺🇸 English ](README.en.md)
-
-<br/>
-
-[![Swift](https://img.shields.io/badge/Swift-5.9+-F05138.svg?style=flat&logo=swift&logoColor=white)](https://swift.org)
-[![macOS](https://img.shields.io/badge/macOS-13.0%2B%20(Ventura%20%7C%20Sonoma%20%7C%20Sequoia)-000000.svg?style=flat&logo=apple&logoColor=white)](https://apple.com/macos)
-[![Release](https://img.shields.io/github/v/release/mrKangHo/FloatingTube?color=brightgreen&label=Latest%20Release)](https://github.com/mrKangHo/FloatingTube/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
-
-<br/>
-
-<a href="https://github.com/mrKangHo/FloatingTube/releases/latest/download/FloatingTube-v1.1.0-macos.zip">
-  <img src="https://img.shields.io/badge/📥_Download_FloatingTube-v1.1.0_(macOS)-2ea44f?style=for-the-badge&logo=apple&logoColor=white" alt="Download FloatingTube" height="42">
-</a>
-
-<br/><br/>
-
-**Watch YouTube effortlessly while coding, designing, writing documents, or browsing without covering your workspace.**  
-Going far beyond basic Picture-in-Picture (PiP) limitations, FloatingTube provides **Window-Confined In-App Fullscreen**, **Mouse Click-Through Mode**, **macOS Status Bar Tray Control**, **Login Persistence**, and a native macOS experience.
-
+<b>Watch YouTube effortlessly while coding, designing, writing documents, or browsing without covering your workspace.</b><br/>
+Going far beyond basic Picture-in-Picture (PiP) limitations, FloatingTube provides <b>Window-Confined In-App Fullscreen</b>, <b>Mouse Click-Through Mode</b>, <b>macOS Status Bar Tray Control</b>, <b>Login Persistence</b>, and a native macOS experience.
 </div>
 
 ---
 
-## 📥 Quick Download & Installation
+## 📥 Installation
+
+### Homebrew
+```bash
+brew tap mrKangHo/tap
+brew install floatingtube
+```
+
+### Direct Download
 
 You can use the latest pre-built application directly:
 
